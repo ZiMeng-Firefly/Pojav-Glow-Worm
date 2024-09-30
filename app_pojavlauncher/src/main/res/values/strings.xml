@@ -35,7 +35,7 @@
     -->
 
     <!-- MCLauncherActivity: Tabs -->
-    <string name="mcl_tab_wiki">Github</string>
+    <string name="mcl_tab_about_launcher">About Launcher</string>
 
     <!-- MCLauncherActivity: Account status -->
 

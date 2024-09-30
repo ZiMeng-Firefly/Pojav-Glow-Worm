@@ -48,7 +48,7 @@ public class MainMenuFragment extends Fragment implements TaskCountListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Button mNewsButton = view.findViewById(R.id.news_button);
+        Button mNewsButton = view.findViewById(R.id.about_launcher_button);
         Button mCustomControlButton = view.findViewById(R.id.custom_control_button);
         Button mInstallJarButton = view.findViewById(R.id.install_jar_button);
         Button mStartTerminalButton = view.findViewById(R.id.start_terminal_button);
