@@ -25,7 +25,27 @@ public class AboutFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        
+        Button mContributorButton1 = view.findViewById(R.id.contributor_pojavteam);
+        Button mContributorButton2 = view.findViewById(R.id.contributor_vera_firefly);
+        Button mContributorButton3 = view.findViewById(R.id.contributor_movtery);
+        Button mContributorButton4 = view.findViewById(R.id.contributor_eurya2233369);
+        Button mContributorButton5 = view.findViewById(R.id.contributor_coloryr);
+        Button mContributorButton6 = view.findViewById(R.id.contributor_mio);
+        Button mContributorButton7 = view.findViewById(R.id.contributor_tungstend);
+
+        mContributorButtin1.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/PojavLauncherTeam"));
+        mContributorButtin2.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/Vera-Firefly"));
+        mContributorButtin3.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/MovTery"));
+        mContributorButtin4.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/Eurya2233369"));
+        mContributorButtin5.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/Coloryr"));
+        mContributorButtin6.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/ShirosakiMio"));
+        mContributorButtin7.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/Tungstend"));
+
+        mContributorButtin2.setOnLongClickListener((v) -> {
+            Tools.openURL(requireActivity(), "https://github.com/Vera-Firefly/Pojav-Glow-Worm")
+            return true;
+        });
+
     }
 
 }

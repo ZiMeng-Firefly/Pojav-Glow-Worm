@@ -119,12 +119,12 @@
 				/>
 
 			<com.firefly.ui.button.LauncherMenuButton
-				android:id="@+id/contributor_tungsten"
+				android:id="@+id/contributor_tungstend"
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/_66sdp"
 				android:background="?android:attr/selectableItemBackground"
-				android:drawableStart="@drawable/image_about_tungsten"
-				android:text="Tungsten"
+				android:drawableStart="@drawable/image_about_tungstend"
+				android:text="Tungstend"
 				/>
 
         </LinearLayout>
