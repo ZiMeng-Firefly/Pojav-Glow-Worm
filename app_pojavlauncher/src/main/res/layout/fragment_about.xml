@@ -69,6 +69,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/_66sdp"
 				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/image_about_pojavteam"
 				android:text="PojavLauncherTeam"
 				/>
 
@@ -77,6 +78,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/_66sdp"
 				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/image_about_verafirefly"
 				android:text="Vera-Firefly"
 				/>
 
@@ -85,6 +87,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/_66sdp"
 				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/image_about_movtery"
 				android:text="MovTery"
 				/>
 
@@ -93,6 +96,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/_66sdp"
 				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/image_about_lingmuqiuzhu"
 				android:text="Eurya2233369"
 				/>
 
@@ -101,6 +105,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/_66sdp"
 				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/image_about_coloryr"
 				android:text="Coloryr"
 				/>
 
@@ -109,6 +114,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/_66sdp"
 				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/image_about_mio"
 				android:text="ShirosakiMio"
 				/>
 
@@ -117,6 +123,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="@dimen/_66sdp"
 				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/image_about_tungsten"
 				android:text="Tungsten"
 				/>
 
