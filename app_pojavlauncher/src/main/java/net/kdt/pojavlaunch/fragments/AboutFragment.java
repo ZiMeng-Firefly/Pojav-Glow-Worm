@@ -42,7 +42,7 @@ public class AboutFragment extends Fragment {
         mContributorButtin7.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/Tungstend"));
 
         mContributorButtin2.setOnLongClickListener((v) -> {
-            Tools.openURL(requireActivity(), "https://github.com/Vera-Firefly/Pojav-Glow-Worm")
+            Tools.openURL(requireActivity(), "https://github.com/Vera-Firefly/Pojav-Glow-Worm");
             return true;
         });
 
