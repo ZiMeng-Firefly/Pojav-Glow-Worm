@@ -8,76 +8,83 @@
     android:paddingHorizontal="@dimen/fragment_padding_medium">
 
 
-    <TextView
-        android:id="@+id/title_textview"
-        style="@style/TextAppearance.AppCompat.Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_large"
-        android:text="@string/fragment_about_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+    <ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toTopOf="parent">
 
-    <View
-        android:id="@+id/view1"
-        style="@style/ThickDivider"
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/padding_large"
-        app:layout_constraintTop_toBottomOf="@+id/title_textview"
-        />
+        <TextView
+            android:id="@+id/title_textview"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_large"
+            android:text="@string/fragment_about_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
-    <TextView
-        android:id="@+id/open_source"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_about_open_source"
-        app:layout_constraintTop_toBottomOf="@+id/view1"
-        />
+        <View
+            android:id="@+id/view1"
+            style="@style/ThickDivider"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/padding_large"
+            app:layout_constraintTop_toBottomOf="@+id/title_textview"
+            />
 
-    <View
-        android:id="@+id/view2"
-        style="@style/ThickDivider"
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/padding_large"
-        app:layout_constraintTop_toBottomOf="@+id/open_source"
-        />
+        <TextView
+            android:id="@+id/open_source"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_about_open_source"
+            app:layout_constraintTop_toBottomOf="@+id/view1"
+            />
 
-    <TextView
-        android:id="@+id/component_title"
-        style="@style/TextAppearance.AppCompat.Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_large"
-        android:text="@string/fragment_about_component_title"
-        app:layout_constraintTop_toTopOf="@+id/view2"
-        />
+        <View
+            android:id="@+id/view2"
+            style="@style/ThickDivider"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/padding_large"
+            app:layout_constraintTop_toBottomOf="@+id/open_source"
+            />
 
-    <TextView
-        android:id="@+id/component_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fragment_about_component"
-        app:layout_constraintTop_toBottomOf="@+id/component_title"
-        />
+        <TextView
+            android:id="@+id/component_title"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_large"
+            android:text="@string/fragment_about_component_title"
+            app:layout_constraintTop_toTopOf="@+id/view2"
+            />
 
-    <View
-        android:id="@+id/view3"
-        style="@style/ThickDivider"
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/padding_large"
-        app:layout_constraintTop_toBottomOf="@+id/component_text"
-        />
+        <TextView
+            android:id="@+id/component_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/fragment_about_component"
+            app:layout_constraintTop_toBottomOf="@+id/component_title"
+            />
 
-    <TextView
-        android:id="@+id/contributor_title"
-        style="@style/TextAppearance.AppCompat.Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_large"
-        android:text="@string/fragment_about_contributor_title"
-        app:layout_constraintTop_toTopOf="@+id/view3"
-        />
+        <View
+            android:id="@+id/view3"
+            style="@style/ThickDivider"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/padding_large"
+            app:layout_constraintTop_toBottomOf="@+id/component_text"
+            />
+
+        <TextView
+            android:id="@+id/contributor_title"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_large"
+            android:text="@string/fragment_about_contributor_title"
+            app:layout_constraintTop_toTopOf="@+id/view3"
+            />
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
