@@ -42,15 +42,15 @@ public class AboutFragment extends Fragment {
         Button mContributorButton6 = view.findViewById(R.id.contributor_mio);
         Button mContributorButton7 = view.findViewById(R.id.contributor_tungstend);
 
-        mContributorButtin1.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_PLT));
-        mContributorButtin2.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_VF));
-        mContributorButtin3.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_MOV));
-        mContributorButtin4.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_EURYA));
-        mContributorButtin5.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_COLORYR));
-        mContributorButtin6.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_MIO));
-        mContributorButtin7.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_T));
+        mContributorButton1.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_PLT));
+        mContributorButton2.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_VF));
+        mContributorButton3.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_MOV));
+        mContributorButton4.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_EURYA));
+        mContributorButton5.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_COLORYR));
+        mContributorButton6.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_MIO));
+        mContributorButton7.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_T));
 
-        mContributorButtin2.setOnLongClickListener((v) -> {
+        mContributorButton2.setOnLongClickListener((v) -> {
             Tools.openURL(requireActivity(), Tools.URL_HOME);
             return true;
         });
