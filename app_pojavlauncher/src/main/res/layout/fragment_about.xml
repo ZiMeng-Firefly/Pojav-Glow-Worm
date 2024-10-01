@@ -24,12 +24,6 @@
                 android:layout_marginTop="@dimen/padding_large"
                 android:text="@string/fragment_about_title" />
 
-            <View
-                android:id="@+id/view1"
-                style="@style/ThickDivider"
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/padding_large" />
-
             <TextView
                 android:id="@+id/open_source"
                 android:layout_width="wrap_content"
@@ -37,7 +31,7 @@
                 android:text="@string/fragment_about_open_source" />
 
             <View
-                android:id="@+id/view2"
+                android:id="@+id/view1"
                 style="@style/ThickDivider"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/padding_large" />
@@ -57,7 +51,7 @@
                 android:text="@string/fragment_about_component" />
 
             <View
-                android:id="@+id/view3"
+                android:id="@+id/view2"
                 style="@style/ThickDivider"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/padding_large" />
@@ -69,6 +63,70 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_large"
                 android:text="@string/fragment_about_contributor_title" />
+
+            <com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/contributor_pojavteam"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/_66sdp"
+				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/ic_menu_custom_controls"
+				android:text="PojavLauncherTeam"
+				/>
+
+            <com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/contributor_vera_firefly"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/_66sdp"
+				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/ic_menu_custom_controls"
+				android:text="Vera-Firefly"
+				/>
+
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/contributor_movtery"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/_66sdp"
+				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/ic_menu_custom_controls"
+				android:text="MovTery"
+				/>
+
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/contributor_eurya2233369"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/_66sdp"
+				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/ic_menu_custom_controls"
+				android:text="Eurya2233369"
+				/>
+
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/contributor_coloryr"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/_66sdp"
+				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/ic_menu_custom_controls"
+				android:text="Coloryr"
+				/>
+
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/contributor_mio"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/_66sdp"
+				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/ic_menu_custom_controls"
+				android:text="ShirosakiMio"
+				/>
+
+			<com.kdt.mcgui.LauncherMenuButton
+				android:id="@+id/contributor_tungsten"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/_66sdp"
+				android:background="?android:attr/selectableItemBackground"
+				android:drawableStart="@drawable/ic_menu_custom_controls"
+				android:text="Tungsten"
+				/>
+
         </LinearLayout>
     </ScrollView>
 
