@@ -30,5 +30,5 @@
     terminal-emulator: Apache 2.0.\n
     Thanks to MCHeads for providing Minecraft avatars.
     </string>
-    <string name="fragment_about_project_contributor_title">Project Contributor</string>
+    <string name="fragment_about_contributor_title">Project Contributor</string>
 </resources>
