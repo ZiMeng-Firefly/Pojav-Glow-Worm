@@ -21,6 +21,13 @@ import java.util.regex.Pattern;
 
 public class AboutFragment extends Fragment {
     public static final String TAG = "ABOUT_FRAGMENT";
+    private static final String GITHUB_URL_PLT = "https://github.com/PojavLauncherTeam";
+    private static final String GITHUB_URL_VF = "https://github.com/Vera-Firefly";
+    private static final String GITHUB_URL_MOV = "https://github.com/MovTery";
+    private static final String GITHUB_URL_EURYA = "https://github.com/Eurya2233369";
+    private static final String GITHUB_URL_COLORYR = "https://github.com/Coloryr";
+    private static final String GITHUB_URL_MIO = "https://github.com/ShirosakiMio";
+    private static final String GITHUB_URL_T = "https://github.com/Tungstend";
     public AboutFragment() {
         super(R.layout.fragment_about);
     }
@@ -35,16 +42,16 @@ public class AboutFragment extends Fragment {
         Button mContributorButton6 = view.findViewById(R.id.contributor_mio);
         Button mContributorButton7 = view.findViewById(R.id.contributor_tungstend);
 
-        mContributorButtin1.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/PojavLauncherTeam"));
-        mContributorButtin2.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/Vera-Firefly"));
-        mContributorButtin3.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/MovTery"));
-        mContributorButtin4.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/Eurya2233369"));
-        mContributorButtin5.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/Coloryr"));
-        mContributorButtin6.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/ShirosakiMio"));
-        mContributorButtin7.setOnClickListener(v -> Tools.openURL(requireActivity(), "https://github.com/Tungstend"));
+        mContributorButtin1.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_PLT));
+        mContributorButtin2.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_VF));
+        mContributorButtin3.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_MOV));
+        mContributorButtin4.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_EURYA));
+        mContributorButtin5.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_COLORYR));
+        mContributorButtin6.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_MIO));
+        mContributorButtin7.setOnClickListener(v -> Tools.openURL(requireActivity(), GITHUB_URL_T));
 
         mContributorButtin2.setOnLongClickListener((v) -> {
-            Tools.openURL(requireActivity(), "https://github.com/Vera-Firefly/Pojav-Glow-Worm");
+            Tools.openURL(requireActivity(), Tools.URL_HOME);
             return true;
         });
 
