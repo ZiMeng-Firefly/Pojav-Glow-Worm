@@ -22,12 +22,14 @@ public class LauncherPreferenceMiscellaneousFragment extends LauncherPreferenceF
         }
         SwitchPreference useSystemVulkan = requirePreference("zinkPreferSystemDriver", SwitchPreference.class);
         useSystemVulkan.setOnPreferenceChangeListener((p, v) -> {
+            boolean set = (boolean) v;
             boolean isAdreno = PGWTools.isAdrenoGPU();
-            if (isAdreno) {
+            if (set && isAdreno) {
                 onCheckGPUDialog(p);
-                return false;
+            } else {
+                return true;
             }
-            return true;
+            return false;
         });
     }
 
@@ -36,7 +38,7 @@ public class LauncherPreferenceMiscellaneousFragment extends LauncherPreferenceF
                 .setTitle("No No No No No!")
                 .setMessage("text")
                 .setConfirmListener(R.string.preference_rendererexp_alertdialog_done, customView -> {
-                    ((SwitchPreference) pre).setChecked(true);
+                    ((SwitchPreference) pre).setChecked(false);
                     return true;
                 })
                 .setCancelListener(R.string.preference_rendererexp_alertdialog_cancel, customView -> true)
