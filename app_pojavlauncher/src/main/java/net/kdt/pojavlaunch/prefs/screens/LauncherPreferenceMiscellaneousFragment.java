@@ -38,7 +38,7 @@ public class LauncherPreferenceMiscellaneousFragment extends LauncherPreferenceF
                 .setTitle("No No No No No!")
                 .setMessage("text")
                 .setConfirmListener(R.string.preference_rendererexp_alertdialog_done, customView -> {
-                    ((SwitchPreference) pre).setChecked(false);
+                    ((SwitchPreference) pre).setChecked(true);
                     return true;
                 })
                 .setCancelListener(R.string.preference_rendererexp_alertdialog_cancel, customView -> true)
