@@ -92,6 +92,7 @@ public class MinecraftGLSurface extends View implements GrabListener {
         setFocusable(true);
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setUpPointerCapture(AbstractTouchpad touchpad) {
         if (mPointerCapture != null) mPointerCapture.detach();
