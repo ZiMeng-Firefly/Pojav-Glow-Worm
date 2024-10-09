@@ -61,7 +61,7 @@ public class ResolutionAdjuster {
                 scaleTextView.setText("Scale Factor: " + mScaleFactor);
 
                 // 新分辨率
-                refreshIngameWindowSize(mScaleFactor);
+                MinecraftGLSurface.refreshIngameWindowSize(mScaleFactor);
             }
 
             @Override
