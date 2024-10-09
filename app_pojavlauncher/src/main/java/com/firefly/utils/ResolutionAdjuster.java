@@ -27,6 +27,9 @@ public class ResolutionAdjuster {
 
     // 显示滑动条弹窗
     public void showSeekBarDialog() {
+        if (glSurface == null) {
+            glSurface = new MinecraftGLSurface(context);
+        }
         // 动态创建一个LinearLayout作为容器
         // 什么?为什么不用.xml来构建?
         // 因为麻烦
@@ -62,7 +65,7 @@ public class ResolutionAdjuster {
                 scaleTextView.setText("Scale Factor: " + mScaleFactor);
 
                 // 新分辨率
-                glSurface.refreshIngameWindowSize(mScaleFactor);
+                if (glSurface != null) glSurface.refreshIngameWindowSize(mScaleFactor);
             }
 
             @Override
