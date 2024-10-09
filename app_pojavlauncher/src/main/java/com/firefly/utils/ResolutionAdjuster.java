@@ -17,6 +17,7 @@ public class ResolutionAdjuster {
 
     private float mScaleFactor = 1.0f; // 默认比例
     private final Context context;
+    private MinecraftGLSurface glSurface;
 
     // 构造函数，传入Context
     public ResolutionAdjuster(Context context) {
@@ -61,7 +62,7 @@ public class ResolutionAdjuster {
                 scaleTextView.setText("Scale Factor: " + mScaleFactor);
 
                 // 新分辨率
-                MinecraftGLSurface.refreshIngameWindowSize(mScaleFactor);
+                glSurface.refreshIngameWindowSize(mScaleFactor);
             }
 
             @Override
