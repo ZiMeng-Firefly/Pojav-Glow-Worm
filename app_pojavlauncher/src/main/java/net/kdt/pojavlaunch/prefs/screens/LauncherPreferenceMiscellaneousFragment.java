@@ -36,12 +36,12 @@ public class LauncherPreferenceMiscellaneousFragment extends LauncherPreferenceF
     private void onCheckGPUDialog(Preference pre) {
         new CustomDialog.Builder(getContext())
                 .setTitle("No No No No No!")
-                .setMessage("text")
+                .setMessage(getString(R.string.worning_system_vulkan_adreno))
                 .setConfirmListener(R.string.preference_rendererexp_alertdialog_done, customView -> {
                     ((SwitchPreference) pre).setChecked(true);
                     return true;
                 })
-                .setCancelListener(R.string.preference_rendererexp_alertdialog_cancel, customView -> true)
+                .setCancelListener(R.string.alertdialog_cancel, customView -> true)
                 .setCancelable(false)
                 .build()
                 .show();
