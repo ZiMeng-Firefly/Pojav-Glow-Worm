@@ -55,7 +55,7 @@ public class ResolutionAdjuster {
         int maxScaleFactor = Math.max(LauncherPreferences.PREF_SCALE_FACTOR, 100);
         scaleSeekBar.setMax(maxScaleFactor - 25);
 
-        mScaleFactor = glSurface.mScaleFactor
+        mScaleFactor = glSurface.mScaleFactor;
         scaleSeekBar.setProgress((int) (mScaleFactor * 100) - 25);
         layout.addView(scaleSeekBar);
 
