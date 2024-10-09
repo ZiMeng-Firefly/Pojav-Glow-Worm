@@ -33,6 +33,8 @@ public class ResolutionAdjuster {
         if (glSurface == null) {
             glSurface = new MinecraftGLSurface(context);
         }
+        mScaleFactor = glSurface.mScaleFactor;
+        int percentage = Math.round(mScaleFactor * 100);
         // 动态创建一个LinearLayout作为容器
         // 什么?为什么不用.xml来构建?
         // 因为麻烦
@@ -43,7 +45,7 @@ public class ResolutionAdjuster {
 
         // 动态创建一个TextView,用于显示缩放因子
         final TextView scaleTextView = new TextView(context);
-        scaleTextView.setText("Scale Factor: " + LauncherPreferences.PREF_SCALE_FACTOR / 100f);
+        scaleTextView.setText("Scale Factor: " + percentage + "%");
         scaleTextView.setTextSize(18);
         layout.addView(scaleTextView);
 
@@ -54,8 +56,6 @@ public class ResolutionAdjuster {
         // 设置滑动条的最大值和初始进度
         int maxScaleFactor = Math.max(LauncherPreferences.PREF_SCALE_FACTOR, 100);
         scaleSeekBar.setMax(maxScaleFactor - 25);
-
-        mScaleFactor = glSurface.mScaleFactor;
         scaleSeekBar.setProgress((int) (mScaleFactor * 100) - 25);
         layout.addView(scaleSeekBar);
 
