@@ -67,7 +67,7 @@ public class MinecraftGLSurface extends View implements GrabListener {
             .remapDpad(true));
 
     /* Resolution scaler option, allow downsizing a window */
-    private final float mScaleFactor = LauncherPreferences.PREF_SCALE_FACTOR / 100f;
+    public float mScaleFactor = LauncherPreferences.PREF_SCALE_FACTOR / 100f;
     /* Sensitivity, adjusted according to screen size */
     private final double mSensitivityFactor = (1.4 * (1080f / Tools.getDisplayMetrics((Activity) getContext()).heightPixels));
 
@@ -343,29 +343,6 @@ public class MinecraftGLSurface extends View implements GrabListener {
     public void refreshSize() {
         windowWidth = Tools.getDisplayFriendlyRes(Tools.currentDisplayMetrics.widthPixels, mScaleFactor);
         windowHeight = Tools.getDisplayFriendlyRes(Tools.currentDisplayMetrics.heightPixels, mScaleFactor);
-        if (mSurface == null) {
-            Log.w("MGLSurface", "Attempt to refresh size on null surface");
-            return;
-        }
-        if (LauncherPreferences.PREF_USE_ALTERNATE_SURFACE) {
-            SurfaceView view = (SurfaceView) mSurface;
-            if (view.getHolder() != null) {
-                view.getHolder().setFixedSize(windowWidth, windowHeight);
-            }
-        } else {
-            TextureView view = (TextureView) mSurface;
-            if (view.getSurfaceTexture() != null) {
-                view.getSurfaceTexture().setDefaultBufferSize(windowWidth, windowHeight);
-            }
-        }
-
-        CallbackBridge.sendUpdateWindowSize(windowWidth, windowHeight);
-
-    }
-
-    public void refreshIngameWindowSize(float mSize) {
-        int windowWidth = Tools.getDisplayFriendlyRes(Tools.currentDisplayMetrics.widthPixels, mSize);
-        int windowHeight = Tools.getDisplayFriendlyRes(Tools.currentDisplayMetrics.heightPixels, mSize);
         if (mSurface == null) {
             Log.w("MGLSurface", "Attempt to refresh size on null surface");
             return;
