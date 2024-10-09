@@ -54,13 +54,9 @@ public class ResolutionAdjuster {
         // 设置滑动条的最大值和初始进度
         int maxScaleFactor = Math.max(LauncherPreferences.PREF_SCALE_FACTOR, 100);
         scaleSeekBar.setMax(maxScaleFactor - 25);
-        if (mScaleFactor != 0.0f) {
-            // 将 mScaleFactor 转换为整数并设置进度
-            scaleSeekBar.setProgress((int) (mScaleFactor * 100) - 25);
-        } else {
-            // 使用默认的 PREF_SCALE_FACTOR
-            scaleSeekBar.setProgress((int) (LauncherPreferences.PREF_SCALE_FACTOR - 25)); // 初始进度
-        }
+
+        mScaleFactor = glSurface.mScaleFactor
+        scaleSeekBar.setProgress((int) (mScaleFactor * 100) - 25);
         layout.addView(scaleSeekBar);
 
         // 设置滑动条监听器
