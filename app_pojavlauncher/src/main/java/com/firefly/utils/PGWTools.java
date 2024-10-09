@@ -30,7 +30,7 @@ public class PGWTools {
         int[] numConfigs = new int[1];
         if (!EGL14.eglChooseConfig(eglDisplay, eglAttributes, 0, configs, 0, 1, numConfigs, 0) || numConfigs[0] == 0) {
             EGL14.eglTerminate(eglDisplay);
-            Log.e("CheckVendor", "Failed to choose an EGL config");
+            Log.e("CheckVendor", "Failed to choose EGL config");
             return false;
         }
 
