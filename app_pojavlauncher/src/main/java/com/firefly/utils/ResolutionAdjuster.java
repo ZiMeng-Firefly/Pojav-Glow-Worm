@@ -45,7 +45,7 @@ public class ResolutionAdjuster {
 
         // 动态创建一个TextView,用于显示缩放因子
         final TextView scaleTextView = new TextView(context);
-        scaleTextView.setText("Scale Factor: " + percentage + "%");
+        scaleTextView.setText(percentage + "%");
         scaleTextView.setTextSize(18);
         layout.addView(scaleTextView);
 
@@ -66,8 +66,9 @@ public class ResolutionAdjuster {
                 // 更新缩放因子
                 mScaleFactor = (progress + 25) / 100f;
                 glSurface.mScaleFactor = mScaleFactor;
+                int scaleFactor = Math.round(mScaleFactor * 100);
                 // 实时更新显示的缩放因子
-                scaleTextView.setText("Scale Factor: " + mScaleFactor);
+                scaleTextView.setText(scaleFactor + "%");
 
                 // 新分辨率
                 if (glSurface != null) glSurface.refreshSize();
@@ -86,11 +87,11 @@ public class ResolutionAdjuster {
 
         // 创建并显示弹窗
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Adjust Resolution Scale");
+        builder.setTitle(context.getString(R.string.mcl_setting_title_resolution_scaler));
         builder.setView(layout);
         builder.setCancelable(false); // 不允许点击外部关闭弹窗,防止进程错误
         // 设置确认按钮，点击关闭弹窗
-        builder.setPositiveButton("Close", (d, i) -> d.dismiss());
+        builder.setPositiveButton(android.R.string.ok, (d, i) -> d.dismiss());
         builder.show();
     }
 
