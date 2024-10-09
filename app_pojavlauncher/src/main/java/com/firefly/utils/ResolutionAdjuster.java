@@ -8,24 +8,20 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.util.Log;
-import android.view.SurfaceView;
-import android.view.TextureView;
-import android.view.SurfaceHolder;
 
+import net.kdt.pojavlaunch.MinecraftGLSurface;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.Tools;
-import org.lwjgl.glfw.CallbackBridge;
 
 public class ResolutionAdjuster {
 
     private float mScaleFactor = 1.0f; // 默认比例
     private final Context context;
-    // private View mSurface;
 
     // 构造函数，传入Context
     public ResolutionAdjuster(Context context) {
         this.context = context;
-        // this.mSurface = surface;
+
     }
 
     // 显示滑动条弹窗
@@ -65,7 +61,7 @@ public class ResolutionAdjuster {
                 scaleTextView.setText("Scale Factor: " + mScaleFactor);
 
                 // 新分辨率
-                refreshSize();
+                refreshIngameWindowSize(mScaleFactor);
             }
 
             @Override
@@ -89,32 +85,4 @@ public class ResolutionAdjuster {
         builder.show();
     }
 
-    // 刷新窗口
-    private void refreshSize() {
-        int windowWidth = Tools.getDisplayFriendlyRes(Tools.currentDisplayMetrics.widthPixels, mScaleFactor);
-        int windowHeight = Tools.getDisplayFriendlyRes(Tools.currentDisplayMetrics.heightPixels, mScaleFactor);
-        /*
-        if (mSurface == null) {
-            Log.w("MGLSurface", "Attempt to refresh size on null surface");
-            return;
-        }
-        if (LauncherPreferences.PREF_USE_ALTERNATE_SURFACE) {
-            SurfaceView view = (SurfaceView) mSurface;
-            if (view.getHolder() != null) {
-                view.getHolder().setFixedSize(windowWidth, windowHeight);
-            }
-        } else {
-            TextureView view = (TextureView) mSurface;
-            if (view.getSurfaceTexture() != null) {
-                view.getSurfaceTexture().setDefaultBufferSize(windowWidth, windowHeight);
-            }
-        }
-        */
-
-        CallbackBridge.sendUpdateWindowSize(windowWidth, windowHeight);
-
-    }
-    // public void setSurface(View surface) {
-    //     this.mSurface = surface;
-    // }
 }
