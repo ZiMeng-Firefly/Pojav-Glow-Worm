@@ -222,7 +222,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
                         openCustomControls();
                         break;
                     case 6:{
-                        ResolutionAdjuster adjuster = new ResolutionAdjuster(getContext());
+                        ResolutionAdjuster adjuster = new ResolutionAdjuster(this);
                         adjuster.showSeekBarDialog();
                     } break;
                 }
