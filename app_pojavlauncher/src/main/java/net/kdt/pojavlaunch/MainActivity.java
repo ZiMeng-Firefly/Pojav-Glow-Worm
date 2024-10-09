@@ -222,7 +222,7 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
                         openCustomControls();
                         break;
                     case 6:{
-                        ResolutionAdjuster adjuster = new ResolutionAdjuster(this);
+                        ResolutionAdjuster adjuster = new ResolutionAdjuster(this, minecraftGLView);
                         adjuster.showSeekBarDialog();
                     } break;
                 }
