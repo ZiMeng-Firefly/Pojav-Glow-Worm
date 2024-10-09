@@ -363,6 +363,29 @@ public class MinecraftGLSurface extends View implements GrabListener {
 
     }
 
+    public void refreshIngameWindowSize(float mSize) {
+        int windowWidth = Tools.getDisplayFriendlyRes(Tools.currentDisplayMetrics.widthPixels, mSize);
+        int windowHeight = Tools.getDisplayFriendlyRes(Tools.currentDisplayMetrics.heightPixels, mSize);
+        if (mSurface == null) {
+            Log.w("MGLSurface", "Attempt to refresh size on null surface");
+            return;
+        }
+        if (LauncherPreferences.PREF_USE_ALTERNATE_SURFACE) {
+            SurfaceView view = (SurfaceView) mSurface;
+            if (view.getHolder() != null) {
+                view.getHolder().setFixedSize(windowWidth, windowHeight);
+            }
+        } else {
+            TextureView view = (TextureView) mSurface;
+            if (view.getSurfaceTexture() != null) {
+                view.getSurfaceTexture().setDefaultBufferSize(windowWidth, windowHeight);
+            }
+        }
+
+        CallbackBridge.sendUpdateWindowSize(windowWidth, windowHeight);
+
+    }
+
     private void realStart(Surface surface) {
         // Initial size set
         refreshSize();
