@@ -23,7 +23,7 @@ public class ResolutionAdjuster {
     public ResolutionAdjuster(Context context) {
         this.context = context;
     }
-    public ResolutionAdjuster(Context context, MinecraftGLSurface glSurface） {
+    public ResolutionAdjuster(Context context, MinecraftGLSurface glSurface) {
         this.context = context;
         this.glSurface = glSurface;
     }
