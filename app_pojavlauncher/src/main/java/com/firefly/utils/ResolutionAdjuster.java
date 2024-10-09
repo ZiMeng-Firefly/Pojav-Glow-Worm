@@ -17,7 +17,6 @@ public class ResolutionAdjuster {
 
     private float mScaleFactor = 1.0f; // 默认比例
     private final Context context;
-    private MinecraftGLSurface glSurface;
 
     // 构造函数，传入Context
     public ResolutionAdjuster(Context context) {
@@ -27,9 +26,7 @@ public class ResolutionAdjuster {
 
     // 显示滑动条弹窗
     public void showSeekBarDialog() {
-        if (glSurface == null) {
-            glSurface = new MinecraftGLSurface(context);
-        }
+        MinecraftGLSurface glSurface = new MinecraftGLSurface(context);
         // 动态创建一个LinearLayout作为容器
         // 什么?为什么不用.xml来构建?
         // 因为麻烦
@@ -64,8 +61,8 @@ public class ResolutionAdjuster {
                 // 实时更新显示的缩放因子
                 scaleTextView.setText("Scale Factor: " + mScaleFactor);
 
-                // 新分辨率
-                if (glSurface != null) glSurface.refreshIngameWindowSize(mScaleFactor);
+                // 刷新分辨率
+                glSurface.refreshIngameWindowSize(mScaleFactor);
             }
 
             @Override
