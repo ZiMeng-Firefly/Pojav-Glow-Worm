@@ -12,7 +12,6 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.SurfaceHolder;
 
-import net.kdt.pojavlaunch.MinecraftGLSurface.mSurface;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.Tools;
 import org.lwjgl.glfw.CallbackBridge;
@@ -21,10 +20,12 @@ public class ResolutionAdjuster {
 
     private float mScaleFactor = 1.0f; // 默认比例
     private final Context context;
+    // private View mSurface;
 
     // 构造函数，传入Context
     public ResolutionAdjuster(Context context) {
         this.context = context;
+        // this.mSurface = surface;
     }
 
     // 显示滑动条弹窗
@@ -92,6 +93,7 @@ public class ResolutionAdjuster {
     private void refreshSize() {
         int windowWidth = Tools.getDisplayFriendlyRes(Tools.currentDisplayMetrics.widthPixels, mScaleFactor);
         int windowHeight = Tools.getDisplayFriendlyRes(Tools.currentDisplayMetrics.heightPixels, mScaleFactor);
+        /*
         if (mSurface == null) {
             Log.w("MGLSurface", "Attempt to refresh size on null surface");
             return;
@@ -107,8 +109,12 @@ public class ResolutionAdjuster {
                 view.getSurfaceTexture().setDefaultBufferSize(windowWidth, windowHeight);
             }
         }
+        */
 
         CallbackBridge.sendUpdateWindowSize(windowWidth, windowHeight);
 
     }
+    // public void setSurface(View surface) {
+    //     this.mSurface = surface;
+    // }
 }
