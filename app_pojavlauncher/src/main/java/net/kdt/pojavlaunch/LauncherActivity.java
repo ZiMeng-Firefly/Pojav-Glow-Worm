@@ -115,55 +115,48 @@ public class LauncherActivity extends BaseActivity {
             .setNeutralButton(R.string.global_delete, (dialog, which) -> mAccountSpinner.removeCurrentAccount())
             .show();
 
-    private final ExtraListener<Boolean> mLaunchGameListener = (key, value) -> {
+
+    private final ExtraListener<Boolean> mStartDownloadMinecraft = (key, value) -> {
+        mLaunchGame(true);
+        return false;
+    };
+
+    private final ExtraListener<Boolean> mSkipDownloadMinecraft = (key, value) -> {
+        mLaunchGame(false);
+        return false;
+    };
+
+    private void mLaunchGame(boolean downloader) {
         if (mProgressLayout.hasProcesses()) {
             Toast.makeText(this, R.string.tasks_ongoing, Toast.LENGTH_LONG).show();
-            return false;
+            return;
         }
 
         String selectedProfile = LauncherPreferences.DEFAULT_PREF.getString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
         if (LauncherProfiles.mainProfileJson == null || !LauncherProfiles.mainProfileJson.profiles.containsKey(selectedProfile)) {
             Toast.makeText(this, R.string.error_no_version, Toast.LENGTH_LONG).show();
-            return false;
+            return;
         }
         MinecraftProfile prof = LauncherProfiles.mainProfileJson.profiles.get(selectedProfile);
         if (prof == null || prof.lastVersionId == null || "Unknown".equals(prof.lastVersionId)) {
             Toast.makeText(this, R.string.error_no_version, Toast.LENGTH_LONG).show();
-            return false;
+            return;
         }
 
         if (mAccountSpinner.getSelectedAccount() == null) {
             Toast.makeText(this, R.string.no_saved_accounts, Toast.LENGTH_LONG).show();
             ExtraCore.setValue(ExtraConstants.SELECT_AUTH_METHOD, true);
-            return false;
+            return;
         }
-        onStartLaunchGame = true;
-        return false;
-    };
-
-    private final ExtraListener<Boolean> mStartDownloadMinecraft = (key, value) -> {
-        if (mProgressLayout.hasProcesses()) {
-            // Stops repeating operations if a process is running
-            return false;
-        }
-        if (!onStartLaunchGame) {
-            return false;
-        }
-        onTryDownloadGame(true);
-        return false;
-    };
-
-    private final ExtraListener<Boolean> mSkipDownloadMinecraft = (key, value) -> {
-        if (mProgressLayout.hasProcesses()) {
-            // Stops repeating operations if a process is running
-            return false;
-        }
-        if (!onStartLaunchGame) {
-            return false;
-        }
-        onTryDownloadGame(false);
-        return false;
-    };
+        String normalizedVersionId = AsyncMinecraftDownloader.normalizeVersionId(prof.lastVersionId);
+        JMinecraftVersionList.Version mcVersion = AsyncMinecraftDownloader.getListedVersion(normalizedVersionId);
+        new MinecraftDownloader().start(
+                downloader,
+                mcVersion,
+                normalizedVersionId,
+                new ContextAwareDoneListener(this, normalizedVersionId)
+        );
+    }
 
     private final TaskCountListener mDoubleLaunchPreventionListener = taskCount -> {
         // Hide the notification that starts the game if there are tasks executing.
@@ -321,20 +314,6 @@ public class LauncherActivity extends BaseActivity {
             return fragment;
         }
         return null;
-    }
-
-    private void onTryDownloadGame(boolean downloader) {
-        onStartLaunchGame = false;
-        String selectedProfile = LauncherPreferences.DEFAULT_PREF.getString(LauncherPreferences.PREF_KEY_CURRENT_PROFILE, "");
-        MinecraftProfile prof = LauncherProfiles.mainProfileJson.profiles.get(selectedProfile);
-        String normalizedVersionId = AsyncMinecraftDownloader.normalizeVersionId(prof.lastVersionId);
-        JMinecraftVersionList.Version mcVersion = AsyncMinecraftDownloader.getListedVersion(normalizedVersionId);
-        new MinecraftDownloader().start(
-                downloader,
-                mcVersion,
-                normalizedVersionId,
-                new ContextAwareDoneListener(this, normalizedVersionId)
-        );
     }
 
     private void checkNotificationPermission() {

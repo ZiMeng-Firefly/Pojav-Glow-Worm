@@ -92,6 +92,15 @@ public class MinecraftGLSurface extends View implements GrabListener {
         setFocusable(true);
     }
 
+    public void refreshSize(float value) {
+        this.mScaleFactor = value;
+        mInGUIProcessor.refreshScaleFactor(mScaleFactor);
+        if (mPointerCapture != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mPointerCapture.refreshScaleFactor(mScaleFactor);
+        }
+        if (mGamepad != null) mGamepad.refreshScaleFactor(mScaleFactor);
+        refreshSize();
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setUpPointerCapture(AbstractTouchpad touchpad) {

@@ -7,26 +7,22 @@ import android.widget.TextView;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.util.Log;
 
 import net.kdt.pojavlaunch.MinecraftGLSurface;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.R;
-import net.kdt.pojavlaunch.Tools;
 
 public class ResolutionAdjuster {
 
     private float mScaleFactor;
     private final Context context;
+    private final OnResolutionChangeListener listener;
     private MinecraftGLSurface glSurface;
 
-    // 构造函数，传入Context
-    public ResolutionAdjuster(Context context) {
-        this.context = context;
-    }
-    public ResolutionAdjuster(Context context, MinecraftGLSurface glSurface) {
+    public ResolutionAdjuster(Context context, MinecraftGLSurface glSurface, OnResolutionChangeListener listener) {
         this.context = context;
         this.glSurface = glSurface;
+        this.listener = listener;
     }
 
     // 显示滑动条弹窗
@@ -66,13 +62,10 @@ public class ResolutionAdjuster {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 // 更新缩放因子
                 mScaleFactor = (progress + 25) / 100f;
-                glSurface.mScaleFactor = mScaleFactor;
+                listener.onChange(mScaleFactor);
                 int scaleFactor = Math.round(mScaleFactor * 100);
                 // 实时更新显示的缩放因子
                 scaleTextView.setText(scaleFactor + "%");
-
-                // 新分辨率
-                if (glSurface != null) glSurface.refreshSize();
             }
 
             @Override
@@ -96,4 +89,7 @@ public class ResolutionAdjuster {
         builder.show();
     }
 
+    public interface OnResolutionChangeListener {
+        void onChange(float value);
+    }
 }
