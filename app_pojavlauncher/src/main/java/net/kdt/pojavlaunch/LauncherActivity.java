@@ -216,7 +216,7 @@ public class LauncherActivity extends BaseActivity {
         ExtraCore.addExtraListener(ExtraConstants.BACK_PREFERENCE, mBackPreferenceListener);
         ExtraCore.addExtraListener(ExtraConstants.SELECT_AUTH_METHOD, mSelectAuthMethod);
 
-        ExtraCore.addExtraListener(ExtraConstants.LAUNCH_GAME, mLaunchGameListener);
+        // ExtraCore.addExtraListener(ExtraConstants.LAUNCH_GAME, mLaunchGameListener);
         ExtraCore.addExtraListener(ExtraConstants.START_DOWNLOADER, mStartDownloadMinecraft);
         ExtraCore.addExtraListener(ExtraConstants.SKIP_DOWNLOADER, mSkipDownloadMinecraft);
 
@@ -267,7 +267,7 @@ public class LauncherActivity extends BaseActivity {
         ProgressKeeper.removeTaskCountListener(mProgressServiceKeeper);
         ExtraCore.removeExtraListenerFromValue(ExtraConstants.BACK_PREFERENCE, mBackPreferenceListener);
         ExtraCore.removeExtraListenerFromValue(ExtraConstants.SELECT_AUTH_METHOD, mSelectAuthMethod);
-        ExtraCore.removeExtraListenerFromValue(ExtraConstants.LAUNCH_GAME, mLaunchGameListener);
+        // ExtraCore.removeExtraListenerFromValue(ExtraConstants.LAUNCH_GAME, mLaunchGameListener);
         ExtraCore.removeExtraListenerFromValue(ExtraConstants.START_DOWNLOADER, mStartDownloadMinecraft);
         ExtraCore.removeExtraListenerFromValue(ExtraConstants.SKIP_DOWNLOADER, mSkipDownloadMinecraft);
 
