@@ -30,6 +30,7 @@
     <string name="controller_remapper_expand_entry">展開以更改鍵碼</string>
     <string name="preference_remap_controller_title">更改控制器按鍵綁定</string>
     <string name="preference_remap_controller_description">允許您修改綁定到每個控制器按鍵的鍵盤按鍵</string>
+    <string name="mcn_signal_title">應用/遊戲 因致命訊號 %d 中止, 請查看 latestlog.txt 以取得更多詳細資訊</string>
     <!-- Pojav GlowWorm -->
     <string name="preference_enable_log_output_desc">在應用程式正式開始運行遊戲時啟用日誌輸出介面</string>
     <string name="preference_enable_log_output_title">在遊戲啟動時啟用日誌輸出</string>
@@ -82,7 +83,7 @@
     <string name="preference_spare_framebuffer_title">備用幀緩衝區</string>
     <string name="preference_spare_framebuffer">使用第二方案的幀緩衝區，啟動失敗時關閉</string>
     <string name="preference_renderer_setup_extra">渲染器 (額外)</string>
-    <string name="preference_renderer_extra_default">Mesa24.2.3 (預設)</string>
+    <string name="preference_renderer_extra_default">Mesa24.2.4 (預設)</string>
     <string name="preference_extra_mesa_version">Mesa 版本</string>
     <string name="preference_extra_driver_model">Gallium驅動程序</string>
     <!-- Dialog -->
