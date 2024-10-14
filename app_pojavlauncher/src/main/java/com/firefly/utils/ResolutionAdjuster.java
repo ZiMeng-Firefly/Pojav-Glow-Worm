@@ -2,15 +2,19 @@ package com.firefly.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.widget.SeekBar;
-import android.widget.TextView;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.LinearLayout;
 
 import net.kdt.pojavlaunch.MinecraftGLSurface;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 import net.kdt.pojavlaunch.R;
+import net.kdt.pojavlaunch.Tools;
 
 public class ResolutionAdjuster {
 
@@ -51,7 +55,7 @@ public class ResolutionAdjuster {
 
         // 动态创建一个TextView,用于显示当前分辨率
         final TextView resolutionTextView = new TextView(context);
-        resolutionTextView.setText("16x9");  // 获取当前分辨率
+        changeResolutionRatioPreview(percentage, resolutionTextView);  // 获取当前分辨率
         resolutionTextView.setTextSize(14);
         resolutionTextView.setPadding(10, 0, 0, 0);  // 添加一些左侧间距
         layout.addView(resolutionTextView);
@@ -76,7 +80,7 @@ public class ResolutionAdjuster {
                 scaleTextView.setText(scaleFactor + "%");
 
                 // 动态更新分辨率TextView,根据缩放因子调整分辨率显示
-                // resolutionTextView.setText("动态分辨率值");
+                changeResolutionRatioPreview(progress, resolutionTextView);
             }
 
             @Override
@@ -98,6 +102,20 @@ public class ResolutionAdjuster {
         // 设置确认按钮, 点击关闭弹窗
         builder.setPositiveButton(android.R.string.ok, (d, i) -> d.dismiss());
         builder.show();
+    }
+
+    private void changeResolutionRatioPreview(int progress, TextView resolutionTextView) {
+        DisplayMetrics metrics = Tools.getCurrentDisplayMetrics();
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        boolean isLandscape = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE || width > height;
+
+        double progressDouble = (double) progress / 100;
+        int previewWidth = (int) ((isLandscape ? width : height) * progressDouble);
+        int previewHeight = (int) ((isLandscape ? height : width) * progressDouble);
+
+        String preview = previewWidth + " x " + previewHeight;
+        resolutionTextView.setText(preview);  // 实时更新TextView中的分辨率
     }
 
     public interface OnResolutionChangeListener {
