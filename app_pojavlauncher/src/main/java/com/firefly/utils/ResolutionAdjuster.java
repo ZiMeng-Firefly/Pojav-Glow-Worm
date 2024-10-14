@@ -105,7 +105,7 @@ public class ResolutionAdjuster {
     }
 
     private void changeResolutionRatioPreview(int progress, TextView resolutionTextView) {
-        DisplayMetrics metrics = Tools.getCurrentDisplayMetrics();
+        DisplayMetrics metrics = Tools.currentDisplayMetrics;
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
         boolean isLandscape = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE || width > height;
