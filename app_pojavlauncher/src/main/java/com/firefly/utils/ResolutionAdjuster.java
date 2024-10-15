@@ -42,11 +42,14 @@ public class ResolutionAdjuster {
         // 因为麻烦
         LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.HORIZONTAL);  // 设置水平排列
-        layout.setPadding(50, 40, 50, 40);
+        layout.setPadding(50, 40, 50, 20);
         layout.setGravity(Gravity.CENTER);
 
         // 动态创建一个 SeekBar ,用于调整缩放因子
         final SeekBar scaleSeekBar = new SeekBar(context);
+        // 设置 SeekBar 的 LayoutParams 为 0 宽度, 并且给它一个权重 1, 确保它能填充剩余的水平空间
+        LinearLayout.LayoutParams seekBarParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        scaleSeekBar.setLayoutParams(seekBarParams);
         scaleSeekBar.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)); // 设置权重1, 充满剩余空间
         // 获取当前设置的最大缩放因子,并设置为滑动条的最大值
         int maxScaleFactor = Math.max(LauncherPreferences.PREF_SCALE_FACTOR, 100);
