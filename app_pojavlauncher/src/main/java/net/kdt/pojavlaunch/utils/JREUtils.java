@@ -437,7 +437,7 @@ public class JREUtils {
         }
     }
 
-    public static void setJVMEnv(final Runtime runtime) {
+    public static void setJVMEnv(final Runtime runtime) throws Throwable {
         Logger.appendToLog("--------- Add custom env");
         String runtimeHome = MultiRTUtils.getRuntimeHome(runtime.name).getAbsolutePath();
         final String graphicsLib = loadGraphicsLibrary();
