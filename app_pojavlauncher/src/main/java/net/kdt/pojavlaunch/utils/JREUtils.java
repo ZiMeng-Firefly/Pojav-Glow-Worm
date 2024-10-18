@@ -98,7 +98,7 @@ public class JREUtils {
         return returnValue;
     }
 
-    public static void initJavaRuntime(String jreHome) {
+    private static void initJavaRuntime(String jreHome) {
         dlopen(findInLdLibPath("libjli.so"));
         if (!dlopen("libjvm.so")) {
             Log.w("DynamicLoader", "Failed to load with no path, trying with full path");
@@ -165,7 +165,7 @@ public class JREUtils {
 
     }
 
-    public static void relocateLibPath(Runtime runtime, String jreHome) {
+    private static void relocateLibPath(Runtime runtime, String jreHome) {
         String JRE_ARCHITECTURE = runtime.arch;
         if (Architecture.archAsInt(JRE_ARCHITECTURE) == ARCH_X86) {
             JRE_ARCHITECTURE = "i386/i486/i586";
@@ -194,7 +194,7 @@ public class JREUtils {
         LD_LIBRARY_PATH = ldLibraryPath.toString();
     }
 
-    public static void setJavaEnvironment(String jreHome) throws Throwable {
+    private static void setJavaEnvironment(String jreHome) throws Throwable {
         Map<String, String> envMap = new ArrayMap<>();
 
         envMap.put("POJAV_NATIVEDIR", NATIVE_LIB_DIR);
@@ -433,8 +433,18 @@ public class JREUtils {
                 System.err.println("Error setting environment variable: " + e.getMessage());
             }
         } else {
-            System.out.println("Native: Library " + jsphName + ".so not found, some mod cannot used");
+            Logger.appendToLog("Native: Library " + jsphName + ".so not found, some mod cannot used");
         }
+    }
+
+    public static void setJVMEnv(final Runtime runtime) {
+        Logger.appendToLog("--------- Add custom env");
+        String runtimeHome = MultiRTUtils.getRuntimeHome(runtime.name).getAbsolutePath();
+        final String graphicsLib = loadGraphicsLibrary();
+        setJavaEnvironment(runtimeHome);
+        checkAndUsedJSPH(runtime);
+        if (LOCAL_RENDERER != null && !LOCAL_RENDERER.startsWith("opengles"))
+            setRendererConfig(graphicsLib);
     }
 
     public static int launchJavaVM(final Activity activity, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
@@ -442,12 +452,7 @@ public class JREUtils {
 
         JREUtils.relocateLibPath(runtime, runtimeHome);
 
-        setJavaEnvironment(runtimeHome);
-        checkAndUsedJSPH(runtime);
-
         final String graphicsLib = loadGraphicsLibrary();
-        if (LOCAL_RENDERER != null && !LOCAL_RENDERER.startsWith("opengles"))
-            setRendererConfig(graphicsLib);
 
         List<String> userArgs = getJavaArgs(activity, runtimeHome, userArgsString);
 
