@@ -194,13 +194,39 @@ public class JREUtils {
         LD_LIBRARY_PATH = ldLibraryPath.toString();
     }
 
-    private static void setJavaEnvironment(String jreHome) throws Throwable {
+    private static void setJVMEnvironment(String jreHome) throws Throwable {
         Map<String, String> envMap = new ArrayMap<>();
-
         envMap.put("POJAV_NATIVEDIR", NATIVE_LIB_DIR);
         envMap.put("JAVA_HOME", jreHome);
         envMap.put("HOME", ProfilePathManager.getCurrentPath());
         envMap.put("TMPDIR", Tools.DIR_CACHE.getAbsolutePath());
+        
+        envMap.put("LD_LIBRARY_PATH", LD_LIBRARY_PATH);
+        envMap.put("PATH", jreHome + "/bin:" + Os.getenv("PATH"));
+
+        envMap.put("AWTSTUB_WIDTH", Integer.toString(CallbackBridge.windowWidth > 0 ? CallbackBridge.windowWidth : CallbackBridge.physicalWidth));
+        envMap.put("AWTSTUB_HEIGHT", Integer.toString(CallbackBridge.windowHeight > 0 ? CallbackBridge.windowHeight : CallbackBridge.physicalHeight));
+
+        for (Map.Entry<String, String> env : envMap.entrySet()) {
+            Logger.appendToLog("Added custom jvm env: " + env.getKey() + "=" + env.getValue());
+            try {
+                Os.setenv(env.getKey(), env.getValue(), true);
+            } catch (NullPointerException exception) {
+                Log.e("JREUtils", exception.toString());
+            }
+        }
+
+        File serverFile = new File(jreHome + "/" + Tools.DIRNAME_HOME_JRE + "/server/libjvm.so");
+        jvmLibraryPath = jreHome + "/" + Tools.DIRNAME_HOME_JRE + "/" + (serverFile.exists() ? "server" : "client");
+        Log.d("DynamicLoader", "Base LD_LIBRARY_PATH: " + LD_LIBRARY_PATH);
+        Log.d("DynamicLoader", "Internal LD_LIBRARY_PATH: " + jvmLibraryPath + ":" + LD_LIBRARY_PATH);
+        setLdLibraryPath(jvmLibraryPath + ":" + LD_LIBRARY_PATH);
+
+    }
+
+    private static void setRendererEnvironment() throws Throwable {
+        Map<String, String> envMap = new ArrayMap<>();
+
         envMap.put("LIBGL_MIPMAP", "3");
 
         // Prevent OptiFine (and other error-reporting stuff in Minecraft) from balooning the log
@@ -222,12 +248,6 @@ public class JREUtils {
         envMap.put("force_glsl_extensions_warn", "true");
         envMap.put("allow_higher_compat_version", "true");
         envMap.put("allow_glsl_extension_directive_midshader", "true");
-
-        envMap.put("LD_LIBRARY_PATH", LD_LIBRARY_PATH);
-        envMap.put("PATH", jreHome + "/bin:" + Os.getenv("PATH"));
-
-        envMap.put("AWTSTUB_WIDTH", Integer.toString(CallbackBridge.windowWidth > 0 ? CallbackBridge.windowWidth : CallbackBridge.physicalWidth));
-        envMap.put("AWTSTUB_HEIGHT", Integer.toString(CallbackBridge.windowHeight > 0 ? CallbackBridge.windowHeight : CallbackBridge.physicalHeight));
 
         if (PREF_BIG_CORE_AFFINITY)
             envMap.put("POJAV_BIG_CORE_AFFINITY", "1");
@@ -299,13 +319,6 @@ public class JREUtils {
             }
         }
 
-        File serverFile = new File(jreHome + "/" + Tools.DIRNAME_HOME_JRE + "/server/libjvm.so");
-        jvmLibraryPath = jreHome + "/" + Tools.DIRNAME_HOME_JRE + "/" + (serverFile.exists() ? "server" : "client");
-        Log.d("DynamicLoader", "Base LD_LIBRARY_PATH: " + LD_LIBRARY_PATH);
-        Log.d("DynamicLoader", "Internal LD_LIBRARY_PATH: " + jvmLibraryPath + ":" + LD_LIBRARY_PATH);
-        setLdLibraryPath(jvmLibraryPath + ":" + LD_LIBRARY_PATH);
-
-        // return ldLibraryPath;
     }
 
     public static void setRendererConfig(String localLibrary) throws Throwable {
@@ -439,9 +452,8 @@ public class JREUtils {
 
     public static void setJVMEnv(final Runtime runtime) throws Throwable {
         Logger.appendToLog("--------- Add custom env");
-        String runtimeHome = MultiRTUtils.getRuntimeHome(runtime.name).getAbsolutePath();
         final String graphicsLib = loadGraphicsLibrary();
-        setJavaEnvironment(runtimeHome);
+        setRendererEnvironment();
         checkAndUsedJSPH(runtime);
         if (LOCAL_RENDERER != null && !LOCAL_RENDERER.startsWith("opengles"))
             setRendererConfig(graphicsLib);
@@ -451,6 +463,7 @@ public class JREUtils {
         String runtimeHome = MultiRTUtils.getRuntimeHome(runtime.name).getAbsolutePath();
 
         JREUtils.relocateLibPath(runtime, runtimeHome);
+        setJVMEnvironment(runtimeHome);
 
         final String graphicsLib = loadGraphicsLibrary();
 
