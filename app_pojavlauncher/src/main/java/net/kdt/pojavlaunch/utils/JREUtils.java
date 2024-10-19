@@ -434,14 +434,14 @@ public class JREUtils {
 
     public static int launchJavaVM(final Activity activity, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
         String runtimeHome = MultiRTUtils.getRuntimeHome(runtime.name).getAbsolutePath();
+        final String graphicsLib = loadGraphicsLibrary();
+
+        if (LOCAL_RENDERER != null) setRendererEnv(graphicsLib);
 
         JREUtils.relocateLibPath(runtime, runtimeHome);
 
         setCommonEnv(runtimeHome);
         checkAndUsedJSPH(runtime);
-
-        final String graphicsLib = loadGraphicsLibrary();
-        if (LOCAL_RENDERER != null) setRendererEnv(graphicsLib);
 
         List<String> userArgs = getJavaArgs(activity, runtimeHome, userArgsString);
 
