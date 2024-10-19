@@ -199,7 +199,6 @@ public final class Tools {
             }
         }
         Runtime runtime = MultiRTUtils.forceReread(Tools.pickRuntime(minecraftProfile, versionJavaRequirement));
-        JREUtils.setJVMEnv(runtime);
         JMinecraftVersionList.Version versionInfo = Tools.getVersionInfo(versionId);
         LauncherProfiles.load(ProfilePathManager.getCurrentProfile());
 
