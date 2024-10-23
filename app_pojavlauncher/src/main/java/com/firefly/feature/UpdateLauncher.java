@@ -19,6 +19,7 @@ import androidx.core.content.FileProvider;
 import com.firefly.ui.dialog.CustomDialog;
 
 import net.kdt.pojavlaunch.R;
+import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 
 import org.json.JSONException;
