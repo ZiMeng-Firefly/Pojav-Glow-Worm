@@ -107,11 +107,11 @@ public class UpdateLauncher {
         if (ignoreVersionFile.exists() && shouldIgnoreVersion(ignoreVersionFile, tagName) && ignore && !check) return;
 
         if (apkFile.exists() && apkVersionFile.exists() && cachedVersionIsValid(apkVersionFile, tagName) && !check) {
-            showInstallDialog(apkFile);
+            new Handler(Looper.getMainLooper()).post(() -> showInstallDialog(apkFile));
         } else {
             deleteFileIfExists(apkFile);
             deleteFileIfExists(apkVersionFile);
-            if (!check) showUpdateDialog(tagName, versionName, releaseNotes);
+            if (!check) new Handler(Looper.getMainLooper()).post(() -> showUpdateDialog(tagName, versionName, releaseNotes));
         }
     }
 
