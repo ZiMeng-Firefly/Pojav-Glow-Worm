@@ -91,7 +91,7 @@ public class UpdateLauncher {
                 if (!ignore) showToast(R.string.pgw_settings_updatelauncher_updated);
                 handleCachedApk(releaseInfo, ignore, true);
             }
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             handleException(e);
         }
     }
