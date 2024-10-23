@@ -6,6 +6,7 @@ import static net.kdt.pojavlaunch.Architecture.ARCH_X86;
 import static net.kdt.pojavlaunch.Architecture.ARCH_X86_64;
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.DEFAULT_PREF;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -166,10 +167,18 @@ public class UpdateLauncher {
     }
 
     private void startDownload(String apkUrl, String tagName) {
-        executor.execute(() -> downloadApk(apkUrl, tagName));
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setTitle(R.string.pgw_settings_updatelauncher_downloading);
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(false);
+        progressDialog.setProgress(0);
+        progressDialog.show();
+
+        executor.execute(() -> downloadApk(apkUrl, tagName, progressDialog));
     }
 
-    private void downloadApk(String apkUrl, String tagName) {
+    private void downloadApk(String apkUrl, String tagName, ProgressDialog progressDialog) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(apkUrl).build();
         File apkFile = new File(dir, CACHE_APK_NAME);
@@ -177,15 +186,45 @@ public class UpdateLauncher {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                Files.write(apkFile.toPath(), response.body().bytes());
+                long totalBytes = response.body().contentLength();
+                byte[] buffer = new byte[8192];
+                long downloadedBytes = 0;
+
+                try (InputStream inputStream = response.body().byteStream();
+                    OutputStream outputStream = new FileOutputStream(apkFile)) {
+
+                    int read;
+                    while ((read = inputStream.read(buffer)) != -1) {
+                        if (isCancelled) {
+                            outputStream.close();
+                            apkFile.delete();
+                            return;
+                        }
+
+                        outputStream.write(buffer, 0, read);
+                        downloadedBytes += read;
+
+                        int progress = (int) (100 * downloadedBytes / totalBytes);
+                        updateProgressDialog(progressDialog, progress);
+                    }
+                }
+
                 writeFile(apkVersionFile, tagName);
-                showDownloadCompleteDialog(apkFile);
+                new Handler(Looper.getMainLooper()).post(() -> showDownloadCompleteDialog(apkFile));
             } else {
                 showToast(R.string.pgw_settings_updatelauncher_download_fail);
             }
         } catch (IOException e) {
             handleException(e);
+        } finally {
+            new Handler(Looper.getMainLooper()).post(progressDialog::dismiss);
         }
+    }
+
+    private void updateProgressDialog(ProgressDialog progressDialog, int progress) {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            progressDialog.setProgress(progress);
+        });
     }
 
     private void showDownloadCompleteDialog(File apkFile) {
