@@ -8,6 +8,7 @@ import static net.kdt.pojavlaunch.prefs.LauncherPreferences.DEFAULT_PREF;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
@@ -50,6 +51,7 @@ public class UpdateLauncher {
     private final File dir;
     private final int localVersionCode;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private volatile boolean isCancelled = false;
 
     public UpdateLauncher(Context context) {
         this.context = context;
@@ -162,6 +164,7 @@ public class UpdateLauncher {
                         "https://" + githubUrl :
                         "https://mirror.ghproxy.com/" + githubUrl;
                 startDownload(apkUrl, tagName);
+                isCancelled = false;
             })
             .setConfirmListener(R.string.alertdialog_cancel, customView -> true)
             .build()
@@ -174,6 +177,9 @@ public class UpdateLauncher {
         progressDialog.setTitle(R.string.pgw_settings_updatelauncher_downloading);
         progressDialog.setCancelable(false);
         progressDialog.setIndeterminate(false);
+        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(android.R.string.cancel), (dialog, which) -> {
+            isCancelled = true;
+        });
         progressDialog.setProgress(0);
         progressDialog.show();
 
@@ -193,7 +199,7 @@ public class UpdateLauncher {
                 long downloadedBytes = 0;
 
                 try (InputStream inputStream = response.body().byteStream();
-                    OutputStream outputStream = new FileOutputStream(apkFile)) {
+                    FileOutputStream outputStream = new FileOutputStream(apkFile)) {
 
                     int read;
                     while ((read = inputStream.read(buffer)) != -1) {
