@@ -96,7 +96,7 @@ public class UpdateLauncher {
         }
     }
 
-    private void handleCachedApk(JSONObject releaseInfo, boolean ignore, boolean check) throws JSONException {
+    private void handleCachedApk(JSONObject releaseInfo, boolean ignore, boolean check) throws JSONException, IOException {
         String tagName = releaseInfo.getString("tag_name");
         String versionName = releaseInfo.getString("name");
         String releaseNotes = releaseInfo.getString("body");
