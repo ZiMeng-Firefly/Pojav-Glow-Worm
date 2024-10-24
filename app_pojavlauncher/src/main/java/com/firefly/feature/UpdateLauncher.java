@@ -4,7 +4,6 @@ import static net.kdt.pojavlaunch.Architecture.ARCH_ARM;
 import static net.kdt.pojavlaunch.Architecture.ARCH_ARM64;
 import static net.kdt.pojavlaunch.Architecture.ARCH_X86;
 import static net.kdt.pojavlaunch.Architecture.ARCH_X86_64;
-import static net.kdt.pojavlaunch.prefs.LauncherPreferences.DEFAULT_PREF;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,7 +21,6 @@ import com.firefly.ui.dialog.CustomDialog;
 
 import net.kdt.pojavlaunch.R;
 import net.kdt.pojavlaunch.Tools;
-import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -124,6 +122,7 @@ public class UpdateLauncher {
         String savedIgnoreVersion = readFile(ignoreVersionFile);
         int savedIgnoreVersionCode = Integer.parseInt(savedIgnoreVersion.replaceAll("[^\\d]", ""));
         int releaseVersionCode = Integer.parseInt(tagName.replaceAll("[^\\d]", ""));
+        if (savedIgnoreVersionCode < releaseVersionCode) deleteFileIfExists(ignoreVersionFile);
         return savedIgnoreVersionCode >= releaseVersionCode;
     }
 
@@ -253,6 +252,7 @@ public class UpdateLauncher {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri apkUri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", apkFile);
         intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         context.startActivity(intent);
     }
@@ -270,7 +270,6 @@ public class UpdateLauncher {
         File ignoreVersionFile = new File(dir, IGNORE_VERSION_FILE_NAME);
         try {
             writeFile(ignoreVersionFile, tagName);
-            LauncherPreferences.DEFAULT_PREF.edit().putString("ignoreVersion", tagName).apply();
         } catch (IOException e) {
             handleException(e);
         }
@@ -301,7 +300,7 @@ public class UpdateLauncher {
     private void showInstallDialog(File apkFile) {
         new CustomDialog.Builder(context)
             .setTitle(context.getString(R.string.pgw_settings_updatelauncher_install_prompt_title))
-            .setMessage(context.getString(R.string.pgw_settings_updatelauncher_install_prompt_message))
+            .setMessage(context.getString(R.string.pgw_settings_updatelauncher_install_prompt_message, apkFile.getAbsolutePath()))
             .setConfirmListener(R.string.pgw_settings_updatelauncher_install, customView -> {
                 installApk(apkFile);
                 return true;
