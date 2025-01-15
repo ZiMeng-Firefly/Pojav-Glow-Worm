@@ -139,6 +139,11 @@ android {
         multiDexEnabled true //important
         resValue 'string', 'curseforge_api_key', getCFApiKey()
         resValue 'string', 'base_version_code', getBaseVersionCode()
+
+        stringfog {
+            implementation 'com.github.megatronking.stringfog.xor.StringFogImpl'
+            packageName nameId
+        }
     }
 
     buildTypes {
@@ -278,7 +283,7 @@ dependencies {
     implementation 'com.github.Mathias-Boulay:virtual-joystick-android:2e7aa25e50'
     implementation 'top.fifthlight.touchcontroller:proxy-client:0.0.1'
 
-
+    implementation 'com.github.megatronking.stringfog:xor:5.0.0'
     // implementation 'com.intuit.sdp:sdp-android:1.0.5'
     // implementation 'com.intuit.ssp:ssp-android:1.0.5'
 
