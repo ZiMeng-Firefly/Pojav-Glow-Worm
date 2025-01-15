@@ -106,8 +106,7 @@ configurations {
 }
 
 android {
-    def nameId = "net.kdt.pojavlaunch"
-    namespace nameId
+    namespace 'net.kdt.pojavlaunch'
 
     compileSdk = 34
 
@@ -132,7 +131,7 @@ android {
     }
 
     defaultConfig {
-        applicationId nameId
+        applicationId 'net.kdt.pojavlaunch.firefly'
         minSdkVersion 24
         targetSdkVersion 28
         versionCode getDateSeconds()
@@ -143,7 +142,7 @@ android {
 
         stringfog {
             implementation 'com.github.megatronking.stringfog.xor.StringFogImpl'
-            packageName nameId
+            packageName 'net.kdt.pojavlaunch.firefly'
         }
     }
 
