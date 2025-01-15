@@ -27,6 +27,7 @@ import com.firefly.utils.MesaUtils;
 import com.firefly.utils.PGWTools;
 import com.firefly.utils.TurnipUtils;
 
+import com.movtery.plugins.renderer.RendererPlugin;
 import com.movtery.ui.subassembly.customprofilepath.ProfilePathHome;
 import com.movtery.ui.subassembly.customprofilepath.ProfilePathManager;
 import com.oracle.dalvik.VMLauncher;
@@ -189,6 +190,10 @@ public class JREUtils {
         if (FFmpegPlugin.isAvailable) {
             ldLibraryPath.append(FFmpegPlugin.libraryPath).append(":");
         }
+        RendererPlugin.Renderer customRenderer = RendererPlugin.getSelectedRenderer();
+        if (customRenderer != null) {
+            ldLibraryPath.append(customRenderer.getPath()).append(":");
+        }
         ldLibraryPath.append(jreHome)
                 .append("/").append(Tools.DIRNAME_HOME_JRE)
                 .append("/jli:").append(jreHome).append("/").append(Tools.DIRNAME_HOME_JRE)
@@ -252,6 +257,7 @@ public class JREUtils {
 
     private static void setRendererEnv() throws Throwable {
         Map<String, String> envMap = new ArrayMap<>();
+        String eglName = null;
 
         if (LOCAL_RENDERER.startsWith("opengles2")) {
             envMap.put("LIBGL_ES", "2");
@@ -261,15 +267,32 @@ public class JREUtils {
             envMap.put("LIBGL_NORMALIZE", "1");
         }
 
-        if (LOCAL_RENDERER.equals("opengles3_ltw")) {
-            envMap.put("LIBGL_ES", "3");
-            envMap.put("POJAVEXEC_EGL", "libltw.so");
+        RendererPlugin.Renderer customRenderer = RendererPlugin.getSelectedRenderer();
+        if (customRenderer != null && LOCAL_RENDERER.equals(customRenderer.getId())) {
+            customRenderer.getEnv().forEach(envPair -> {
+                String envKey = envPair.getFirst();
+                String envValue = envPair.getSecond();
+                if (envKey.equals("DLOPEN")) return;
+                if (envKey.equals("LIB_MESA_NAME")) {
+                    envMap.put(envKey, customRenderer.getPath() + "/" + envValue);
+                } else {
+                    envMap.put(envKey, envValue);
+                }
+            });
+            String customEglName = customRenderer.getEglName();
+            if (customEglName.startsWith("/")) {
+                eglName = customRenderer.getPath() + customEglName;
+            } else {
+                eglName = customEglName;
+            }
         }
 
         if (LOCAL_RENDERER.equals("opengles3_angle")) {
             envMap.put("LIBGL_ES", "3");
-            envMap.put("POJAVEXEC_EGL", "libEGL_angle.so");
+            eglName = "libEGL_angle.so";
         }
+
+        if (eglName != null) envMap.put("POJAVEXEC_EGL", eglName);
 
         if (!LOCAL_RENDERER.startsWith("opengles")) {
             envMap.put("MESA_GLSL_CACHE_DIR", Tools.DIR_CACHE.getAbsolutePath());
@@ -647,9 +670,20 @@ public class JREUtils {
      * @return The name of the loaded library
      */
     public static String loadGraphicsLibrary() {
-        if (LOCAL_RENDERER == null) return null;
+        RendererPlugin.Renderer customRenderer = RendererPlugin.getSelectedRenderer();
+        if (LOCAL_RENDERER == null && customRenderer == null) return null;
         String renderLibrary;
-        if (LOCAL_RENDERER.equals("mesa_3d")) {
+        if (customRenderer != null) {
+            renderLibrary = customRenderer.getGlName();
+            customRenderer.getEnv().forEach(envPair -> {
+                if (envPair.getFirst().equals("DLOPEN")) {
+                    String[] libs = envPair.getSecond().split(",");
+                    for (String lib : libs) {
+                        dlopen(customRenderer.getPath() + "/" + lib);
+                    }
+                }
+            });
+        } else if (LOCAL_RENDERER.equals("mesa_3d")) {
             switch (MESA_LIBS) {
                 case "default":
                     renderLibrary = "libOSMesa_8.so";
@@ -699,9 +733,6 @@ public class JREUtils {
                     break;
                 case "opengles3_angle":
                     renderLibrary = "libAngle.so";
-                    break;
-                case "opengles3_ltw":
-                    renderLibrary = "libltw.so";
                     break;
                 default:
                     Log.w("RENDER_LIBRARY", "No renderer selected, defaulting to opengles2");

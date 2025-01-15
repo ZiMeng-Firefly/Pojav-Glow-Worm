@@ -132,6 +132,7 @@
     <string name="osm_choose_cmldo">Choose Mesa Loader Driver Override</string>
     <!-- Update Launcher -->
     <string name="preference_launcher_title">Launcher settings</string>
+    <string name="preference_launcher_desc">Launcher Personalization</string>
     <string name="preference_update_launcher_title">Get updated</string>
     <string name="preference_update_launcher_desc">Get updates for the Launcher</string>
     <string name="pgw_settings_updatelauncher_updated">Is already the latest version %s</string>
@@ -163,5 +164,6 @@
     <string name="pgw_settings_ctu_dl_downloading">Downloading Turnip Driver</string>
 
     <string name="pgw_settings_choose_download_source">Choose Download Source</string>
+    <string name="setting_renderer_from_plugins">From %s Plugin</string>
 
 </resources>
