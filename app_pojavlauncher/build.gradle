@@ -243,9 +243,18 @@ android {
 
     buildFeatures {
         prefab true
+        buildConfig true
     }
 
     buildToolsVersion = '34.0.0'
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    viewBinding {
+        enabled = true
+    }
+
 }
 
 dependencies {
