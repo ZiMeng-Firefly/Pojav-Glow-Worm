@@ -106,7 +106,8 @@ configurations {
 }
 
 android {
-    namespace 'net.kdt.pojavlaunch'
+    def nameId = "net.kdt.pojavlaunch"
+    namespace nameId
 
     compileSdk = 34
 
@@ -131,7 +132,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "net.kdt.pojavlaunch.firefly"
+        applicationId nameId
         minSdkVersion 24
         targetSdkVersion 28
         versionCode getDateSeconds()
