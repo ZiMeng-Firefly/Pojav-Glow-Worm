@@ -35,6 +35,8 @@ typedef void* (*ld_android_link_namespaces_t)(struct android_namespace_t* namesp
 static ld_android_create_namespace_t android_create_namespace = NULL;
 static struct android_namespace_t* driver_namespace = NULL;
 
+bool patch_elf_soname(int patchfd, int realfd, uint16_t patchid);
+
 static struct android_namespace_t* create_namespace_local(
     const char* name, const char* ld_library_path, const char* default_library_path, uint64_t type,
     const char* permitted_when_isolated_path, struct android_namespace_t* parent) {
