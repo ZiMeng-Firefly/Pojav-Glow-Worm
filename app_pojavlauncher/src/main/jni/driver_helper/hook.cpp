@@ -28,7 +28,7 @@ void* android_dlopen_ext(const char* filename, int flags, const android_dlextinf
     }
 
     if (strstr(filename, "vulkan.") == nullptr) {
-        return android_dlopen_ext_impl(filename, flags, extinfo, &android_dlopen_ext);
+        return android_dlopen_ext_impl(filename, flags, extinfo, reinterpret_cast<const void*>(&android_dlopen_ext));
     }
 
     return global_ready_handle.load();
@@ -60,7 +60,7 @@ void* load_sphal_library(const char* filename, int flags) {
     extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
     extinfo.library_namespace = androidNamespace;
 
-    return android_dlopen_ext_impl(filename, flags, &extinfo, &android_dlopen_ext);
+    return android_dlopen_ext_impl(filename, flags, &extinfo, reinterpret_cast<const void*>(&android_dlopen_ext));
 }
 
 __attribute__((visibility("default"), used))
