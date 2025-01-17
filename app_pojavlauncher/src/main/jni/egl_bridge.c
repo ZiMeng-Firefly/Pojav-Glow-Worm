@@ -53,6 +53,8 @@ struct PotatoBridge potatoBridge;
 
 void bigcore_set_affinity();
 
+void* loadTurnipVulkan();
+
 EXTERNAL_API void pojavTerminate() {
     printf("EGLBridge: Terminating\n");
 

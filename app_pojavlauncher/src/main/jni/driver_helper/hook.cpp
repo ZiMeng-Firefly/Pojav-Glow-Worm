@@ -23,9 +23,11 @@ void linker_hook_set_handles(void* handle, void* dlopen_ext, void* get_namespace
 
 __attribute__((visibility("default"), used))
 void* android_dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo) {
+/*
     if (!filename || !android_dlopen_ext_impl) {
         return nullptr;
     }
+*/
 
     if (strstr(filename, "vulkan.") == nullptr) {
         return android_dlopen_ext_impl(filename, flags, extinfo, reinterpret_cast<const void*>(&android_dlopen_ext));

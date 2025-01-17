@@ -56,8 +56,6 @@ include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 
-LOCAL_CPPFLAGS := -std=c++17
-LOCAL_LDLIBS := -llog -ldl -lc++
 LOCAL_MODULE := driver_helper
 LOCAL_SRC_FILES := \
     driver_helper/driver_helper.c \
