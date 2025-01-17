@@ -46,7 +46,6 @@ LOCAL_SRC_FILES := \
     input_bridge_v3.c \
     jre_launcher.c \
     utils.c \
-    driver_helper.c\
     stdio_is.c
 
 ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
@@ -60,7 +59,9 @@ include $(CLEAR_VARS)
 LOCAL_CPPFLAGS := -std=c++17
 LOCAL_LDLIBS := -llog -ldl -lc++
 LOCAL_MODULE := driver_helper
-LOCAL_SRC_FILES := driver_helper/nsbypass.c
+LOCAL_SRC_FILES := \
+    driver_helper/driver_helper.c \
+    driver_helper/nsbypass.c
 LOCAL_CFLAGS := -fPIC -g -rdynamic
 
 include $(BUILD_SHARED_LIBRARY)

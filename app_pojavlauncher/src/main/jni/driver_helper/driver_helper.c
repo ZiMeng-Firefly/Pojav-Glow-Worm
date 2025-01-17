@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <dlfcn.h>
 #include <android/dlext.h>
-#include "driver_helper/nsbypass.h"
+#include "nsbypass.h"
 #include "GL/gl.h"
 
 //#define ADRENO_POSSIBLE
@@ -66,7 +66,7 @@ void* loadTurnipVulkan() {
     const char* cache_dir = getenv("TMPDIR");
 
     if (!native_dir) 
-        native_dir = getenv("NATIVEDIR");
+        native_dir = getenv("POJAV_NATIVEDIR");
 
     if (!linker_ns_load(native_dir)) 
         return NULL;
