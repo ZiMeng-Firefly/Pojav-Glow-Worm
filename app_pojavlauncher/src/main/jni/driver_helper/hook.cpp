@@ -35,7 +35,7 @@ void* android_dlopen_ext(const char* filename, int flags, const android_dlextinf
 }
 
 __attribute__((visibility("default"), used))
-void* load_sphal_library(const char* filename, int flags) {
+void* android_load_sphal_library(const char* filename, int flags) {
     if (!filename || !android_dlopen_ext_impl || !android_get_exported_namespace_impl) {
         return nullptr;
     }

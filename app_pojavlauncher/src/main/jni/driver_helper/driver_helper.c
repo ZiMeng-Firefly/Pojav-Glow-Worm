@@ -90,7 +90,7 @@ void* loadTurnipVulkan() {
     }
 
     void* android_get_exported_namespace = dlsym(dl_android, "android_get_exported_namespace");
-    void (*linkerhookPassHandles)(void*, void*, void*) = dlsym(linkerhook, "linkerhook_pass_handles");
+    void (*linkerhookPassHandles)(void*, void*, void*) = dlsym(linkerhook, "linker_hook_set_handles");
 
     if (!linkerhookPassHandles || !android_get_exported_namespace) {
         dlclose(dl_android);
