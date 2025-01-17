@@ -25,14 +25,11 @@ LOCAL_CFLAGS += -g -rdynamic
 include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
-# Link GLESv2 for test
 LOCAL_LDLIBS := -ldl -llog -landroid
-# -lGLESv2
 LOCAL_MODULE := pojavexec
-LOCAL_SHARED_LIBRARIES := bytehook
+LOCAL_SHARED_LIBRARIES := driver_helper bytehook
 LOCAL_CFLAGS += -g -rdynamic
-# LOCAL_CFLAGS += -DDEBUG
-# -DGLES_TEST
+
 LOCAL_SRC_FILES := \
     bigcoreaffinity.c \
     egl_bridge.c \
