@@ -16,13 +16,11 @@ static std::atomic<void*> global_ready_handle{nullptr};
 static const char* supported_namespaces[] = {"sphal", "vendor", "default"};
 
 __attribute__((visibility("default"), used))
-void linker_hook_set_handles(void* handle, 
-                             void* (*dlopen_ext)(const char*, int, const android_dlextinfo*, const void*), 
-                             struct android_namespace_t* (*get_namespace)(const char*))
+void linker_hook_set_handles(void* handle, void* android_dlopen_ext, void* get_namespace)
 {
     ready_handle = handle;
     global_ready_handle.store(handle);
-    android_dlopen_ext_impl = (decltype(android_dlopen_ext_impl))dlopen_ext;
+    android_dlopen_ext_impl = (decltype(android_dlopen_ext_impl))android_dlopen_ext;
     android_get_exported_namespace_impl = (decltype(android_get_exported_namespace_impl))get_namespace;
 }
 
