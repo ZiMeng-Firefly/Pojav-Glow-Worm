@@ -34,7 +34,7 @@ static void* checkIfGlobalReadyHandle() {
 }
 
 __attribute__((visibility("default"), used))
-void *android_dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo) {
+void *android_dlopen_ext(const char *filename, int flags, const android_dlextinfo *extinfo) {
     if (strstr(filename, "vulkan."))
         return checkIfGlobalReadyHandle();
 
@@ -42,7 +42,7 @@ void *android_dlopen_ext(const char* filename, int flags, const android_dlextinf
 }
 
 __attribute__((visibility("default"), used))
-void *android_load_sphal_library(const char* filename, int flags) {
+void *android_load_sphal_library(const char *filename, int flags) {
     if (strstr(filename, "vulkan."))
         return checkIfGlobalReadyHandle();
 
