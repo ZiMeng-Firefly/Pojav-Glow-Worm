@@ -101,10 +101,6 @@ void* loadTurnipVulkan() {
     linkerhookPassHandles(turnip_driver_handle, android_dlopen_ext, android_get_exported_namespace);
 
     void* libvulkan = linker_ns_dlopen_unique(cache_dir, "libvulkan.so", RTLD_LOCAL | RTLD_NOW);
-    if (!libvulkan) printf("libvulkan is null!\n");
-
-    dlclose(dl_android);
-    dlclose(linkerhook);
 
     return libvulkan;
 }
