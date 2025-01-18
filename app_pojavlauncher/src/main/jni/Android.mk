@@ -56,6 +56,7 @@ include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := driver_helper
+LOCAL_SHARED_LIBRARIES := linkerhook
 LOCAL_SRC_FILES := \
     driver_helper/driver_helper.c \
     driver_helper/nsbypass.c
@@ -69,11 +70,9 @@ include $(BUILD_SHARED_LIBRARY)
 
 
 include $(CLEAR_VARS)
-
 LOCAL_MODULE := linkerhook
 LOCAL_SRC_FILES := driver_helper/hook.cpp
 LOCAL_LDFLAGS := -z global
-
 include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
