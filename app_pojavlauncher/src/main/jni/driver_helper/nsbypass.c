@@ -129,7 +129,7 @@ void* linker_ns_dlopen_unique(const char* tmpdir, const char* name, int flags) {
         .flags = ANDROID_DLEXT_USE_NAMESPACE | ANDROID_DLEXT_USE_LIBRARY_FD,
         .library_fd = patch_fd,
         .library_namespace = driver_namespace
-    }
+    };
     snprintf(pathbuf, PATH_MAX, "/proc/self/fd/%d", patch_fd);
     return android_dlopen_ext(pathbuf, flags, &extinfo);
 #else
