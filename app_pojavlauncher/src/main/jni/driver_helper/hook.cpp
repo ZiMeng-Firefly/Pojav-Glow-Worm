@@ -23,11 +23,8 @@ void linker_hook_set_handles(void* handle, void* dlopen_ext, void* get_namespace
 
 __attribute__((visibility("default"), used))
 void* android_dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo) {
-    if (!filename || !android_dlopen_ext_impl) {
-        return nullptr;
-    }
-
-    if (strstr(filename, "vulkan.") == nullptr) {
+    if (!strstr(filename, "vulkan."))
+    {
         return android_dlopen_ext_impl(filename, flags, extinfo, reinterpret_cast<const void*>(&android_dlopen_ext));
     }
 
@@ -36,29 +33,25 @@ void* android_dlopen_ext(const char* filename, int flags, const android_dlextinf
 
 __attribute__((visibility("default"), used))
 void* android_load_sphal_library(const char* filename, int flags) {
-    if (!filename || !android_dlopen_ext_impl || !android_get_exported_namespace_impl) {
-        return nullptr;
-    }
-
-    if (strstr(filename, "vulkan.") != nullptr) {
+    if (strstr(filename, "vulkan."))
+    {
         return global_ready_handle.load();
     }
 
     struct android_namespace_t* androidNamespace = nullptr;
-    for (const char* namespace_name : supported_namespaces) {
+    for (const char* namespace_name : supported_namespaces)
+    {
         androidNamespace = android_get_exported_namespace_impl(namespace_name);
-        if (androidNamespace != nullptr) {
-            break;
-        }
+        if (androidNamespace != nullptr) break;
     }
 
-    if (!androidNamespace) {
+    if (!androidNamespace)
         return nullptr;
-    }
 
-    android_dlextinfo extinfo = {};
-    extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
-    extinfo.library_namespace = androidNamespace;
+    android_dlextinfo extinfo = {
+        .flags = ANDROID_DLEXT_USE_NAMESPACE;
+        .library_namespace = androidNamespace;
+    };
 
     return android_dlopen_ext_impl(filename, flags, &extinfo, reinterpret_cast<const void*>(&android_dlopen_ext));
 }

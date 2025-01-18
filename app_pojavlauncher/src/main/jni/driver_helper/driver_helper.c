@@ -100,7 +100,7 @@ void* loadTurnipVulkan() {
 
     void* aaa = linkerhookPassHandles(turnip_driver_handle, android_dlopen_ext, android_get_exported_namespace);
     if (!aaa) {
-        ptintf("Filed to link pass handles\n");
+        printf("Filed to link pass handles\n");
         dlclose(dl_android);
         dlclose(linkerhook);
         dlclose(turnip_driver_handle);

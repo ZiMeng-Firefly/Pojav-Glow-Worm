@@ -106,34 +106,31 @@ void* linker_ns_dlopen(const char* name, int flag) {
 void* linker_ns_dlopen_unique(const char* tmpdir, const char* name, int flags) {
 #ifdef ADRENO_POSSIBLE
     char pathbuf[PATH_MAX];
-    static uint16_t patch_id = 0;
-    snprintf(pathbuf, sizeof(pathbuf), "%s/%d_p.so", tmpdir, patch_id);
-
-    int patch_fd = open(pathbuf, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+    static uint16_t patch_id;
+    int patch_fd, real_fd;
+    snprintf(pathbuf, PATH_MAX, "%s/%d_p.so", tmpdir, patch_id);
+    patch_fd = open(pathbuf, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
     if (patch_fd == -1) return NULL;
-
-    snprintf(pathbuf, sizeof(pathbuf), "%s/%s", SEARCH_PATH, name);
-    int real_fd = open(pathbuf, O_RDONLY);
+    snprintf(pathbuf, PATH_MAX, "%s/%s", SEARCH_PATH, name);
+    real_fd = open(pathbuf, O_RDONLY);
     if (real_fd == -1)
     {
         close(patch_fd);
         return NULL;
     }
 
-    if (!patch_elf_soname(patch_fd, real_fd, patch_id))
-    {
+    if (!patch_elf_soname(patch_fd, real_fd, patch_id)) {
         close(patch_fd);
         close(real_fd);
         return NULL;
     }
 
     android_dlextinfo extinfo = {
-        .flags = ANDROID_DLEXT_USE_NAMESPACE | ANDROID_DLEXT_USE_LIBRARY_FD,
-        .library_fd = patch_fd,
-        .library_namespace = driver_namespace
-    };
-
-    snprintf(pathbuf, sizeof(pathbuf), "/proc/self/fd/%d", patch_fd);
+        .flags = ANDROID_DLEXT_USE_NAMESPACE | ANDROID_DLEXT_USE_LIBRARY_FD;
+        .library_fd = patch_fd;
+        .library_namespace = driver_namespace;
+    }
+    snprintf(pathbuf, PATH_MAX, "/proc/self/fd/%d", patch_fd);
     return android_dlopen_ext(pathbuf, flags, &extinfo);
 #else
     return NULL;
@@ -142,11 +139,15 @@ void* linker_ns_dlopen_unique(const char* tmpdir, const char* name, int flags) {
 
 bool patch_elf_soname(int patchfd, int realfd, uint16_t patchid) {
     struct stat realstat;
-    if (fstat(realfd, &realstat)) return false;
-    if (ftruncate64(patchfd, realstat.st_size) == -1) return false;
+    if (fstat(realfd, &realstat))
+        return false;
+
+    if (ftruncate64(patchfd, realstat.st_size) == -1)
+        return false;
 
     char* target = mmap(NULL, realstat.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, patchfd, 0);
-    if (!target) return false;
+    if (!target)
+        return false;
 
     if (read(realfd, target, realstat.st_size) != realstat.st_size)
     {
@@ -155,31 +156,28 @@ bool patch_elf_soname(int patchfd, int realfd, uint16_t patchid) {
     }
     close(realfd);
 
-    ELF_EHDR* ehdr = (ELF_EHDR*)target;
-    ELF_SHDR* shdr = (ELF_SHDR*)(target + ehdr->e_shoff);
-
+    ELF_EHDR *ehdr = (ELF_EHDR*)target;
+    ELF_SHDR *shdr = (ELF_SHDR*)(target + ehdr->e_shoff);
     for (ELF_HALF i = 0; i < ehdr->e_shnum; i++)
     {
-        ELF_SHDR* hdr = &shdr[i];
-        if (hdr->sh_type == SHT_DYNAMIC)
-        {
+        ELF_SHDR *hdr = &shdr[i];
+        if (hdr->sh_type == SHT_DYNAMIC) {
             char* strtab = target + shdr[hdr->sh_link].sh_offset;
-            ELF_DYN* dynEntries = (ELF_DYN*)(target + hdr->sh_offset);
-
-            for (ELF_XWORD k = 0; k < (hdr->sh_size / hdr->sh_entsize); k++)
+            ELF_DYN *dynEntries = (ELF_DYN*)(target + hdr->sh_offset);
+            for (ELF_XWORD k = 0; k < (hdr->sh_size / hdr->sh_entsize);k++)
             {
                 ELF_DYN* dynEntry = &dynEntries[k];
                 if (dynEntry->d_tag == DT_SONAME)
                 {
                     char* soname = strtab + dynEntry->d_un.d_val;
-                    snprintf(soname, 4, "%03x", patchid);
+                    char sprb[4];
+                    snprintf(sprb, 4, "%03x", patchid);
+                    memcpy(soname, sprb, 3);
                     munmap(target, realstat.st_size);
                     return true;
                 }
             }
         }
     }
-
-    munmap(target, realstat.st_size);
     return false;
 }
