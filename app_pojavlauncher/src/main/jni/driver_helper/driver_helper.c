@@ -93,7 +93,7 @@ void* loadTurnipVulkan() {
 
     void* dl_android = linker_ns_dlopen("libdl_android.so", RTLD_LOCAL | RTLD_LAZY);
     if (!dl_android) {
-    .    fprintf(stderr, "AdrenoSupport: Failed to load libdl_android.so\n%s\n", dlerror());
+        fprintf(stderr, "AdrenoSupport: Failed to load libdl_android.so\n%s\n", dlerror());
         dlclose(linkerhook);
         dlclose(turnip_driver_handle);
         return NULL;
