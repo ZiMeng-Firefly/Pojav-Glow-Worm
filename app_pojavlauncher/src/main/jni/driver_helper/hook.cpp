@@ -25,7 +25,6 @@ void linker_hook_set_handles(void* handle, void* dlopen_ext, void* get_namespace
 
 static void* checkIfGlobalReadyHandle() {
     void* handle = global_ready_handle.load();
-    // 不知道为什么global_ready_handle初始化之后还是会有空指针的异常,所以加了这个检查
     if (handle == nullptr)
     {
         fprintf(stderr, "Global ready handle is null, falling back to ready_handle.\n");
@@ -35,15 +34,15 @@ static void* checkIfGlobalReadyHandle() {
 }
 
 __attribute__((visibility("default"), used))
-void* android_dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo) {
+void *android_dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo) {
     if (strstr(filename, "vulkan."))
         return checkIfGlobalReadyHandle();
 
-    return android_dlopen_ext_impl(filename, flags, extinfo, reinterpret_cast<const void*>(&android_dlopen_ext));
+    return android_dlopen_ext_impl(filename, flags, extinfo, &android_dlopen_ext);
 }
 
 __attribute__((visibility("default"), used))
-void* android_load_sphal_library(const char* filename, int flags) {
+void *android_load_sphal_library(const char* filename, int flags) {
     if (strstr(filename, "vulkan."))
         return checkIfGlobalReadyHandle();
 
@@ -59,7 +58,7 @@ void* android_load_sphal_library(const char* filename, int flags) {
         .library_namespace = androidNamespace
     };
 
-    return android_dlopen_ext_impl(filename, flags, &extinfo, reinterpret_cast<const void*>(&android_dlopen_ext));
+    return android_dlopen_ext_impl(filename, flags, &extinfo, &android_dlopen_ext);
 }
 
 __attribute__((visibility("default"), used))
