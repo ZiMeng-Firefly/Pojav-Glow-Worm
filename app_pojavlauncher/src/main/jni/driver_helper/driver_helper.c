@@ -60,10 +60,7 @@ bool checkAdrenoGraphics() {
 
 void* loadTurnipVulkan() {
     if (!checkAdrenoGraphics())
-    {
-        printf("Non-Snapdragon processor\n");
         return NULL;
-    }
 
     const char* native_dir = getenv("TURNIP_DIR");
     const char* cache_dir = getenv("TMPDIR");
@@ -72,28 +69,20 @@ void* loadTurnipVulkan() {
         native_dir = getenv("POJAV_NATIVEDIR");
 
     if (!linker_ns_load(native_dir))
-    {
-        printf("linker native dir failed\n");
         return NULL;
-    }
 
     void* linkerhook = linker_ns_dlopen("liblinkerhook.so", RTLD_LOCAL | RTLD_NOW);
     if (!linkerhook)
-    {
-        printf("hook link filed\n");
         return NULL;
-    }
 
     void* turnip_driver_handle = linker_ns_dlopen("libvulkan_freedreno.so", RTLD_LOCAL | RTLD_NOW);
     if (!turnip_driver_handle) {
-        fprintf(stderr, "AdrenoSupport: Failed to load Turnip!\n%s\n", dlerror());
         dlclose(linkerhook);
         return NULL;
     }
 
     void* dl_android = linker_ns_dlopen("libdl_android.so", RTLD_LOCAL | RTLD_LAZY);
     if (!dl_android) {
-        fprintf(stderr, "AdrenoSupport: Failed to load libdl_android.so\n%s\n", dlerror());
         dlclose(linkerhook);
         dlclose(turnip_driver_handle);
         return NULL;
@@ -103,7 +92,8 @@ void* loadTurnipVulkan() {
     void (*linkerhookPassHandles)(void*, void*, void*) = dlsym(linkerhook, "linker_hook_set_handles");
 
     if (!linkerhookPassHandles || !android_get_exported_namespace) {
-        printf("android_get_exported_namespace or linkerhookPassHandles failed\n");
+        if (!linkerhookPassHandles) printf("linkerhookPassHandles failed\n");
+        if (!android_get_exported_namespace) printf("android_get_exported_namespace failed\n");
         dlclose(dl_android);
         dlclose(linkerhook);
         dlclose(turnip_driver_handle);
