@@ -42,15 +42,12 @@ void* android_load_sphal_library(const char* filename, int flags) {
     for (const char* namespace_name : supported_namespaces)
     {
         androidNamespace = android_get_exported_namespace_impl(namespace_name);
-        if (androidNamespace != nullptr) break;
+        if (androidNamespace != NULL) break;
     }
 
-    if (!androidNamespace)
-        return nullptr;
-
     android_dlextinfo extinfo = {
-        .flags = ANDROID_DLEXT_USE_NAMESPACE;
-        .library_namespace = androidNamespace;
+        .flags = ANDROID_DLEXT_USE_NAMESPACE,
+        .library_namespace = androidNamespace
     };
 
     return android_dlopen_ext_impl(filename, flags, &extinfo, reinterpret_cast<const void*>(&android_dlopen_ext));
