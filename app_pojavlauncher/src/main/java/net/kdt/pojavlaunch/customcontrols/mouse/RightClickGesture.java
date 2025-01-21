@@ -9,7 +9,7 @@ import org.lwjgl.glfw.CallbackBridge;
 public class RightClickGesture extends ValidatorGesture {
     private boolean mGestureEnabled = true;
     private boolean mGestureValid = true;
-    private float mGestureStartX, mGestureStartY;
+    private float mGestureStartX, mGestureStartY, mGestureEndX, mGestureEndY;
 
     public RightClickGesture(Handler mHandler) {
         super(mHandler, 150);
@@ -23,6 +23,11 @@ public class RightClickGesture extends ValidatorGesture {
             mGestureEnabled = false;
             mGestureValid = true;
         }
+    }
+
+    public void setMotion(float deltaX, float deltaY) {
+        mGestureEndX += deltaX;
+        mGestureEndY += deltaY;
     }
 
     @Override
@@ -39,7 +44,7 @@ public class RightClickGesture extends ValidatorGesture {
     public void onGestureCancelled(boolean isSwitching) {
         mGestureEnabled = true;
         if (!mGestureValid || isSwitching) return;
-        boolean fingerStill = LeftClickGesture.isFingerStill(mGestureStartX, mGestureStartY, LeftClickGesture.FINGER_STILL_THRESHOLD);
+        boolean fingerStill = LeftClickGesture.isFingerStill(mGestureStartX, mGestureStartY, mGestureEndX, mGestureEndY, LeftClickGesture.FINGER_STILL_THRESHOLD);
         if (!fingerStill) return;
         CallbackBridge.sendMouseButton(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT, true);
         CallbackBridge.sendMouseButton(LwjglGlfwKeycode.GLFW_MOUSE_BUTTON_RIGHT, false);
