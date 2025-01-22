@@ -17,7 +17,8 @@ static const char *supported_namespaces[] = {"sphal", "vendor", "default"};
 
 union PointerCaster {
     void* dataPtr;
-    void* (*funcPtr)(const char*, int, const android_dlextinfo*, const void*);
+    void* (*funcPtr_4args)(const char*, int, const android_dlextinfo*, const void*);
+    void* (*funcPtr_3args)(const char*, int, const android_dlextinfo*);
     struct android_namespace_t* (*namespaceFuncPtr)(const char*);
 };
 
@@ -29,7 +30,7 @@ void linker_hook_set_handles(void* handle, void* android_dlopen_ext, void* andro
 
     PointerCaster caster;
     caster.dataPtr = android_dlopen_ext;
-    android_dlopen_ext_impl = caster.funcPtr;
+    android_dlopen_ext_impl = caster.funcPtr_4args;
 
     caster.dataPtr = android_get_exported_namespace;
     android_get_exported_namespace_impl = caster.namespaceFuncPtr;
@@ -51,7 +52,7 @@ void *android_dlopen_ext(const char *filename, int flags, const android_dlextinf
         return checkIfGlobalReadyHandle();
 
     PointerCaster caster;
-    caster.funcPtr = android_dlopen_ext;
+    caster.funcPtr_3args = android_dlopen_ext;
     return android_dlopen_ext_impl(filename, flags, extinfo, caster.dataPtr);
 }
 
@@ -73,7 +74,7 @@ void *android_load_sphal_library(const char *filename, int flags) {
     };
 
     PointerCaster caster;
-    caster.funcPtr = android_dlopen_ext;
+    caster.funcPtr_3args = android_dlopen_ext;
     return android_dlopen_ext_impl(filename, flags, &extinfo, caster.dataPtr);
 }
 
