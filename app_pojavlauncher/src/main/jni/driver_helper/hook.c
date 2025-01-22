@@ -38,10 +38,9 @@ void *android_load_sphal_library(const char *filename, int flags) {
         if (androidNamespace != NULL) break;
     }
 
-    android_dlextinfo info = {
-        .flags = ANDROID_DLEXT_USE_NAMESPACE,
-        .library_namespace = androidNamespace
-    };
+    android_dlextinfo info;
+    info.flags = ANDROID_DLEXT_USE_NAMESPACE;
+    info.library_namespace = androidNamespace;
 
     return android_dlopen_ext_impl(filename, flags, &info, &android_dlopen_ext);
 }
