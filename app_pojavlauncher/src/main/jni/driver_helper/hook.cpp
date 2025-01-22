@@ -15,13 +15,24 @@ static std::atomic<void*> global_ready_handle{nullptr};
 
 static const char *supported_namespaces[] = {"sphal", "vendor", "default"};
 
+union PointerCaster {
+    void* dataPtr;
+    void* (*funcPtr)(const char*, int, const android_dlextinfo*, const void*);
+    struct android_namespace_t* (*namespaceFuncPtr)(const char*);
+};
+
 __attribute__((visibility("default"), used))
 void linker_hook_set_handles(void* handle, void* android_dlopen_ext, void* android_get_exported_namespace)
 {
     ready_handle = handle;
     global_ready_handle.store(handle);
-    android_dlopen_ext_impl = android_dlopen_ext;
-    android_get_exported_namespace_impl = android_get_exported_namespace;
+
+    PointerCaster caster;
+    caster.dataPtr = android_dlopen_ext;
+    android_dlopen_ext_impl = caster.funcPtr;
+
+    caster.dataPtr = android_get_exported_namespace;
+    android_get_exported_namespace_impl = caster.namespaceFuncPtr;
 }
 
 static void* checkIfGlobalReadyHandle() {
@@ -39,7 +50,9 @@ void *android_dlopen_ext(const char *filename, int flags, const android_dlextinf
     if (strstr(filename, "vulkan."))
         return checkIfGlobalReadyHandle();
 
-    return android_dlopen_ext_impl(filename, flags, extinfo, &android_dlopen_ext);
+    PointerCaster caster;
+    caster.funcPtr = android_dlopen_ext;
+    return android_dlopen_ext_impl(filename, flags, extinfo, caster.dataPtr);
 }
 
 __attribute__((visibility("default"), used))
@@ -59,7 +72,9 @@ void *android_load_sphal_library(const char *filename, int flags) {
         .library_namespace = androidNamespace
     };
 
-    return android_dlopen_ext_impl(filename, flags, &extinfo, &android_dlopen_ext);
+    PointerCaster caster;
+    caster.funcPtr = android_dlopen_ext;
+    return android_dlopen_ext_impl(filename, flags, &extinfo, caster.dataPtr);
 }
 
 __attribute__((visibility("default"), used))
