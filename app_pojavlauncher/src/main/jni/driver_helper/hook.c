@@ -40,7 +40,7 @@ void* android_load_sphal_library(const char* filename, int flags) {
 
     struct android_namespace_t* androidNamespace = NULL;
     for (size_t i = 0; i < SPHAL_NAMESPACE_COUNT && !androidNamespace; i++) {
-        androidNamespace = android_get_exported_namespace_p(sphal_namespaces[i]);
+        androidNamespace = android_get_exported_namespace_impl(sphal_namespaces[i]);
     }
 
     if (!androidNamespace) {
