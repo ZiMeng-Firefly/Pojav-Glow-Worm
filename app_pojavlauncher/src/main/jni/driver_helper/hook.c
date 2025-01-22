@@ -41,7 +41,7 @@ void *android_load_sphal_library(const char *filename, int flags) {
     android_dlextinfo info = {
         .flags = ANDROID_DLEXT_USE_NAMESPACE,
         .library_namespace = androidNamespace
-    }
+    };
 
     return android_dlopen_ext_impl(filename, flags, &info, &android_dlopen_ext);
 }
