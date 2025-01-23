@@ -1,8 +1,3 @@
-
-//
-// Created by Vera-Firefly on 17.01.2025.
-//
-
 #ifndef LINKER_NSBYPASS_H
 #define LINKER_NSBYPASS_H
 

@@ -1,0 +1,17 @@
+//
+//
+//
+
+#ifndef LINKER_HOOK_H
+#define LINKER_HOOK_H
+
+#include <android/dlext.h>
+#include <string.h>
+#include <stdio.h>
+
+void set_handles(void* handle, void* dlopen_ext, void* get_namespace);
+void* dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo);
+void* load_sphal_library(const char* filename, int flags);
+uint64_t hook_atrace_get_enabled_tags();
+
+#endif //LINKER_HOOK_H

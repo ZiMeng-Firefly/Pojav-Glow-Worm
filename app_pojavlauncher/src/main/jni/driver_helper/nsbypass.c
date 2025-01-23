@@ -1,5 +1,6 @@
 //
-// Created by Vera-Firefly on 17.01.2025.
+// Created by maks on 05.06.2023.
+// Modifiled by Vera-Firefly on 17.01.2025.
 //
 #include "nsbypass.h"
 #include <dlfcn.h>
