@@ -61,7 +61,6 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_LDLIBS := -ldl -llog -landroid
 LOCAL_MODULE := driver_helper
-LOCAL_SHARED_LIBRARIES := linkerhook
 LOCAL_SRC_FILES := \
     driver_helper/driver_helper.c \
     driver_helper/nsbypass.c
