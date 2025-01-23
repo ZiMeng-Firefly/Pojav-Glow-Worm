@@ -57,7 +57,7 @@ jobs:
           path: app_pojavlauncher/src/main/assets/components/lwjgl3
           workflow_conclusion: success
           repo: Vera-Firefly/lwjgl3-build
-          branch: main
+          branch: test
           name: lwjgl
 
       - name: Build Release ${{matrix.arch}} .apk
@@ -126,7 +126,7 @@ jobs:
           path: app_pojavlauncher/src/main/assets/components/lwjgl3
           workflow_conclusion: success
           repo: Vera-Firefly/lwjgl3-build
-          branch: main
+          branch: test
           name: lwjgl
 
       - name: Build Debug-noruntime ${{matrix.arch}} .apk
