@@ -53,7 +53,7 @@ struct PotatoBridge potatoBridge;
 
 void bigcore_set_affinity();
 
-void* load_turnip_vulkan();
+void* loadTurnipVulkan();
 
 EXTERNAL_API void pojavTerminate() {
     printf("EGLBridge: Terminating\n");
@@ -167,7 +167,7 @@ void load_vulkan() {
     int deviceApiLevel = android_get_device_api_level();
     if (zinkPreferSystemDriver == NULL && deviceApiLevel >= 28) {
 #ifdef ADRENO_POSSIBLE
-        void* result = load_turnip_vulkan();
+        void* result = loadTurnipVulkan();
         if (result != NULL)
         {
             printf("AdrenoSupp: Loaded Turnip, loader address: %p\n", result);
