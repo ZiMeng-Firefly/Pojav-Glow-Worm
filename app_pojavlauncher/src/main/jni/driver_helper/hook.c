@@ -5,52 +5,41 @@
 #include <android/dlext.h>
 #include <string.h>
 #include <stdio.h>
-#include <atomic>
 
 static void* (*android_dlopen_ext_impl)(const char* filename, int flags, const android_dlextinfo* extinfo, const void* caller_addr);
 static struct android_namespace_t* (*android_get_exported_namespace_impl)(const char* name);
 
 static void* ready_handle;
-static std::atomic<void*> global_ready_handle{nullptr};
 
 static const char* supported_namespaces[] = {"sphal", "vendor", "default"};
 
 __attribute__((visibility("default"), used))
 void linker_hook_set_handles(void* handle, void* dlopen_ext, void* get_namespace) {
     ready_handle = handle;
-    global_ready_handle.store(handle);
-    android_dlopen_ext_impl = (decltype(android_dlopen_ext_impl))dlopen_ext;
-    android_get_exported_namespace_impl = (decltype(android_get_exported_namespace_impl))get_namespace;
-}
-
-static void* checkIfGlobalReadyHandle() {
-    void* handle = global_ready_handle.load();
-    if (handle == nullptr)
-    {
-        fprintf(stderr, "Global ready handle is null, falling back to ready_handle.\n");
-        return ready_handle;
-    }
-    return handle;
+    android_dlopen_ext_impl = dlopen_ext;
+    android_get_exported_namespace_impl = get_namespace;
 }
 
 __attribute__((visibility("default"), used))
 void* android_dlopen_ext(const char* filename, int flags, const android_dlextinfo* extinfo) {
     if (strstr(filename, "vulkan."))
-        return checkIfGlobalReadyHandle();
+        return ready_handle;
 
-    return android_dlopen_ext_impl(filename, flags, extinfo, reinterpret_cast<const void*>(&android_dlopen_ext));
+    return android_dlopen_ext_impl(filename, flags, extinfo, &android_dlopen_ext);
 }
 
 __attribute__((visibility("default"), used))
 void* android_load_sphal_library(const char* filename, int flags) {
     if (strstr(filename, "vulkan."))
-        return checkIfGlobalReadyHandle();
+        return ready_handle;
 
-    struct android_namespace_t* androidNamespace = nullptr;
-    for (const char* namespace_name : supported_namespaces)
+    struct android_namespace_t* androidNamespace;
+    for (int i = 0; i < 3; i++)
     {
-        androidNamespace = android_get_exported_namespace_impl(namespace_name);
-        if (androidNamespace != NULL) break;
+        androidNamespace = android_get_exported_namespace_impl(supported_namespaces[i]);
+
+        if (androidNamespace != NULL)
+            break;
     }
 
     android_dlextinfo extinfo = {
@@ -58,7 +47,7 @@ void* android_load_sphal_library(const char* filename, int flags) {
         .library_namespace = androidNamespace
     };
 
-    return android_dlopen_ext_impl(filename, flags, &extinfo, reinterpret_cast<const void*>(&android_dlopen_ext));
+    return android_dlopen_ext_impl(filename, flags, &extinfo, &android_dlopen_ext);
 }
 
 __attribute__((visibility("default"), used))
