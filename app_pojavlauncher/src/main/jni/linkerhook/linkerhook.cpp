@@ -40,7 +40,6 @@ void* dlopen_ext(const char* filename, int flags, const android_dlextinfo* extin
     return dlopen_ext_impl(filename, flags, extinfo, reinterpret_cast<const void*>(&dlopen_ext));
 }
 
-__attribute__((visibility("default"), used))
 void* load_sphal_library(const char* filename, int flags) {
     if (strstr(filename, "vulkan."))
         return checkIfGlobalReadyHandle();
@@ -60,7 +59,6 @@ void* load_sphal_library(const char* filename, int flags) {
     return dlopen_ext_impl(filename, flags, &extinfo, reinterpret_cast<const void*>(&dlopen_ext));
 }
 
-__attribute__((visibility("default"), used))
 uint64_t hook_atrace_get_enabled_tags() {
     return 0;
 }
