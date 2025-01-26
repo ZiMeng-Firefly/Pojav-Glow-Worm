@@ -34,7 +34,6 @@ LOCAL_SHARED_LIBRARIES := driver_helper bridge_common
 LOCAL_CFLAGS += -g -rdynamic
 
 LOCAL_SRC_FILES := \
-    environ/environ.c \
     pojav/bigcoreaffinity.c \
     pojav/egl_bridge.c \
     pojav/input_bridge_v3.c \
@@ -73,7 +72,9 @@ include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := bridge_common
-LOCAL_SRC_FILES := ctxbridges/bridge_common.c
+LOCAL_SRC_FILES := \
+    environ/environ.c \
+    ctxbridges/bridge_common.c 
 include $(BUILD_SHARED_LIBRARY)
 
 

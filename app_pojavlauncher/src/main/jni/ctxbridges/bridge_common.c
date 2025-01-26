@@ -1,8 +1,13 @@
 //
 // Created by Vera-Firefly on 27.01.2025.
 //
+#include <stdlib.h>
 #include <EGL/egl.h>
 #include "renderer_config.h"
+
+void *abuffer;
+void *gbuffer;
+void* mbuffer;
 
 EGLConfig config;
 struct PotatoBridge potatoBridge;
