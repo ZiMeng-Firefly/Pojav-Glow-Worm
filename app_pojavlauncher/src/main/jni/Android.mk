@@ -30,7 +30,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_LDLIBS := -ldl -llog -landroid
 LOCAL_MODULE := pojavexec
-LOCAL_SHARED_LIBRARIES := driver_helper bridge_common
+LOCAL_SHARED_LIBRARIES := driver_helper bridge_config br_common
 LOCAL_CFLAGS += -g -rdynamic
 
 LOCAL_SRC_FILES := \
@@ -53,7 +53,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_LDLIBS := -ldl -llog -landroid
 LOCAL_MODULE := bridge_config
-LOCAL_SHARED_LIBRARIES := bridge_common
+LOCAL_SHARED_LIBRARIES := br_common
 LOCAL_CFLAGS += -g -rdynamic
 
 LOCAL_SRC_FILES := \
@@ -71,7 +71,8 @@ include $(BUILD_SHARED_LIBRARY)
 
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := bridge_common
+LOCAL_LDLIBS := -ldl -llog -landroid
+LOCAL_MODULE := br_common
 LOCAL_SRC_FILES := \
     environ/environ.c \
     ctxbridges/bridge_common.c 
