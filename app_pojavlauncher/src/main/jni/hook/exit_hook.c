@@ -9,7 +9,7 @@
 #include <dlfcn.h>
 #include <android/log.h>
 #include <stdlib.h>
-#include "stdio_is.h"
+#include <pojav/stdio_is.h>
 
 static _Atomic bool exit_tripped = false;
 

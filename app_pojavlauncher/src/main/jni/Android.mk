@@ -34,8 +34,13 @@ LOCAL_SHARED_LIBRARIES := driver_helper
 LOCAL_CFLAGS += -g -rdynamic
 
 LOCAL_SRC_FILES := \
-    bigcoreaffinity.c \
-    egl_bridge.c \
+    environ/environ.c \
+    pojav/bigcoreaffinity.c \
+    pojav/egl_bridge.c \
+    pojav/input_bridge_v3.c \
+    pojav/jre_launcher.c \
+    pojav/utils.c \
+    pojav/stdio_is.c \
     ctxbridges/gl_bridge.c \
     ctxbridges/osm_bridge.c \
     ctxbridges/osm_bridge_xxx1.c \
@@ -45,13 +50,8 @@ LOCAL_SRC_FILES := \
     ctxbridges/osmesa_loader.c \
     ctxbridges/swap_interval_no_egl.c \
     ctxbridges/virgl_bridge.c \
-    environ/environ.c \
-    input_bridge_v3.c \
-    jre_launcher.c \
-    utils.c \
-    stdio_is.c \
-    java_exec_hooks.c \
-    lwjgl_dlopen_hook.c
+    hook/java_exec_hooks.c \
+    hook/lwjgl_dlopen_hook.c
 
 ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
 LOCAL_CFLAGS += -DADRENO_POSSIBLE
@@ -88,14 +88,14 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := exithook
 LOCAL_LDLIBS := -ldl -llog
 LOCAL_SHARED_LIBRARIES := bytehook pojavexec
-LOCAL_SRC_FILES := exit_hook.c
+LOCAL_SRC_FILES := hook/exit_hook.c
 include $(BUILD_SHARED_LIBRARY)
 
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := pojavexec_awt
 LOCAL_SRC_FILES := \
-    awt_bridge.c
+    pojav/awt_bridge.c
 include $(BUILD_SHARED_LIBRARY)
 
 
