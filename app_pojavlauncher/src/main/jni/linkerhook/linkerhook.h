@@ -1,5 +1,5 @@
 //
-//
+// Created by Vera-Firefly on 17.01.2025
 //
 
 #ifndef LINKER_HOOK_H
