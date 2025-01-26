@@ -47,10 +47,10 @@ def getVersionName = {
     } else {
         if (TAG_PART_COMMIT.toString().trim() == "") {
             //Fallback no repo
-            return ("fuchsia-" + "${getDate()}")
+            return ("mume-" + "${getDate()}")
         } else {
             // Used by github actions
-            TAG_STRING =  'fuchsia-' + "${getDate()}" + "-" + TAG_PART_COMMIT.toString().trim()
+            TAG_STRING =  'mume-' + "${getDate()}" + "-" + TAG_PART_COMMIT.toString().trim()
         }
     }
 

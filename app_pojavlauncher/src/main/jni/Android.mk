@@ -30,7 +30,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_LDLIBS := -ldl -llog -landroid
 LOCAL_MODULE := pojavexec
-LOCAL_SHARED_LIBRARIES := driver_helper bytehook
+LOCAL_SHARED_LIBRARIES := driver_helper
 LOCAL_CFLAGS += -g -rdynamic
 
 LOCAL_SRC_FILES := \
@@ -49,7 +49,9 @@ LOCAL_SRC_FILES := \
     input_bridge_v3.c \
     jre_launcher.c \
     utils.c \
-    stdio_is.c
+    stdio_is.c \
+    java_exec_hooks.c \
+    lwjgl_dlopen_hook.c
 
 ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
 LOCAL_CFLAGS += -DADRENO_POSSIBLE
@@ -79,6 +81,14 @@ LOCAL_SRC_FILES := \
     linkerhook/linkerhook.cpp \
     linkerhook/linkerns.c
 LOCAL_LDFLAGS := -z global
+include $(BUILD_SHARED_LIBRARY)
+
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := exithook
+LOCAL_LDLIBS := -ldl -llog
+LOCAL_SHARED_LIBRARIES := bytehook pojavexec
+LOCAL_SRC_FILES := exit_hook.c
 include $(BUILD_SHARED_LIBRARY)
 
 

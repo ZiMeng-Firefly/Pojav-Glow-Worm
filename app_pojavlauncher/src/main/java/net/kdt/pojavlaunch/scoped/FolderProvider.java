@@ -1,10 +1,12 @@
 package net.kdt.pojavlaunch.scoped;
 
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.CancellationSignal;
 import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
@@ -45,8 +47,10 @@ public class FolderProvider extends DocumentsProvider {
 
     private static final String ALL_MIME_TYPES = "*/*";
 
-    private static final File BASE_DIR = new File(Tools.DIR_GAME_HOME);
+    private File BASE_DIR;
 
+    private ContentResolver mContentResolver;
+    private String mStorageProviderAuthortiy;
 
     // The default columns to return information about a root if no specific
     // columns are requested in a query.
@@ -97,6 +101,7 @@ public class FolderProvider extends DocumentsProvider {
     @Override
     public Cursor queryDocument(String documentId, String[] projection) throws FileNotFoundException {
         final MatrixCursor result = new MatrixCursor(projection != null ? projection : DEFAULT_DOCUMENT_PROJECTION);
+        result.setNotificationUri(mContentResolver, createUriForDocId(documentId));
         includeFile(result, documentId, null);
         return result;
     }
@@ -111,6 +116,7 @@ public class FolderProvider extends DocumentsProvider {
         for (File file : children) {
             includeFile(result, null, file);
         }
+        result.setNotificationUri(mContentResolver, createUriForDocId(parentDocumentId));
         return result;
     }
 
@@ -130,6 +136,14 @@ public class FolderProvider extends DocumentsProvider {
 
     @Override
     public boolean onCreate() {
+        if(Tools.checkStorageRoot(getContext())) {
+            Tools.initStorageConstants(getContext());
+        }else {
+            return false;
+        }
+        BASE_DIR = new File(Tools.DIR_GAME_HOME);
+        mContentResolver = getContext().getContentResolver();
+        mStorageProviderAuthortiy = getContext().getString(R.string.storageProviderAuthorities);
         return true;
     }
 
@@ -153,6 +167,7 @@ public class FolderProvider extends DocumentsProvider {
         } catch (IOException e) {
             throw new FileNotFoundException("Failed to create document with id " + newFile.getPath());
         }
+        notifyChange(createUriForDocId(parentDocumentId));
         return newFile.getPath();
     }
 
@@ -197,6 +212,7 @@ public class FolderProvider extends DocumentsProvider {
                 throw new FileNotFoundException("Failed to delete document with id " + documentId);
             }
         }
+        notifyChange(createUriForFile(file.getParentFile()));
     }
 
     @Override
@@ -338,5 +354,17 @@ public class FolderProvider extends DocumentsProvider {
         Collections.reverse(pathIds);
         Log.i("FolderProvider", pathIds.toString());
         return new DocumentsContract.Path(getDocIdForFile(source), pathIds);
+    }
+
+    private Uri createUriForDocId(String documentId) throws FileNotFoundException {
+        return createUriForFile(getFileForDocId(documentId));
+    }
+
+    private Uri createUriForFile(File file) {
+        return DocumentsContract.buildDocumentUri(mStorageProviderAuthortiy, file.getAbsolutePath());
+    }
+
+    private void notifyChange(Uri uri) {
+        mContentResolver.notifyChange(uri, null);
     }
 }

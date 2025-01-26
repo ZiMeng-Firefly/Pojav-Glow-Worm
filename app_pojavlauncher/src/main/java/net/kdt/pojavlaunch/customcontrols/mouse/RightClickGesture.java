@@ -12,14 +12,14 @@ public class RightClickGesture extends ValidatorGesture {
     private float mGestureStartX, mGestureStartY, mGestureEndX, mGestureEndY;
 
     public RightClickGesture(Handler mHandler) {
-        super(mHandler, 150);
+        super(mHandler);
     }
 
     public final void inputEvent() {
         if (!mGestureEnabled) return;
         if (submit()) {
-            mGestureStartX = CallbackBridge.mouseX;
-            mGestureStartY = CallbackBridge.mouseY;
+            mGestureStartX = mGestureEndX = CallbackBridge.mouseX;
+            mGestureStartY = mGestureEndY = CallbackBridge.mouseY;
             mGestureEnabled = false;
             mGestureValid = true;
         }
@@ -28,6 +28,11 @@ public class RightClickGesture extends ValidatorGesture {
     public void setMotion(float deltaX, float deltaY) {
         mGestureEndX += deltaX;
         mGestureEndY += deltaY;
+    }
+
+    @Override
+    protected int getGestureDelay() {
+        return 150;
     }
 
     @Override

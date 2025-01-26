@@ -25,7 +25,7 @@ public class LocaleUtils extends ContextWrapper {
     public static ContextWrapper setLocale(Context context) {
         if (DEFAULT_PREF == null) {
             DEFAULT_PREF = PreferenceManager.getDefaultSharedPreferences(context);
-            LauncherPreferences.loadPreferences(context);
+            PREF_FORCE_ENGLISH = DEFAULT_PREF.getBoolean("force_english", false);
         }
 
         if (DEFAULT_PREF.getBoolean("force_english", false)) {

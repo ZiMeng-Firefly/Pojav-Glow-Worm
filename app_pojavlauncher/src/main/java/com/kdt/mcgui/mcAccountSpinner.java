@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Keep;
@@ -366,8 +367,9 @@ public class mcAccountSpinner extends AppCompatSpinner implements AdapterView.On
         BitmapDrawable oldBitmapDrawable = mHeadDrawable;
 
         if (mSelectecAccount != null) {
-            ExtendedTextView view = ((ExtendedTextView) getSelectedView());
-            if (view != null) {
+            View layout = getSelectedView();
+            if (layout != null){
+                ExtendedTextView view = layout.findViewById(R.id.account_item);
                 Bitmap bitmap = mSelectecAccount.getSkinFace();
                 if (bitmap != null) {
                     mHeadDrawable = new BitmapDrawable(getResources(), bitmap);
@@ -386,7 +388,7 @@ public class mcAccountSpinner extends AppCompatSpinner implements AdapterView.On
     }
 
 
-    private static class AccountAdapter extends ArrayAdapter<String> {
+    private class AccountAdapter extends ArrayAdapter<String> {
 
         private final HashMap<String, Drawable> mImageCache = new HashMap<>();
 
@@ -396,21 +398,18 @@ public class mcAccountSpinner extends AppCompatSpinner implements AdapterView.On
 
         @Override
         public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            return getView(position, convertView, parent);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             if (convertView == null) {
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_minecraft_account, parent, false);
             }
-            ExtendedTextView textview = (ExtendedTextView) convertView;
+            ExtendedTextView textview = convertView.findViewById(R.id.account_item);
+            ImageView deleteButton = convertView.findViewById(R.id.delete_account_button);
             textview.setText(super.getItem(position));
 
             // Handle the "Add account section"
-            if (position == 0)
+            if (position == 0) {
                 textview.setCompoundDrawables(ResourcesCompat.getDrawable(parent.getResources(), R.drawable.ic_add, null), null, null, null);
+                deleteButton.setVisibility(View.GONE);
+            }
             else {
                 String username = super.getItem(position);
                 Drawable accountHead = mImageCache.get(username);
@@ -419,8 +418,31 @@ public class mcAccountSpinner extends AppCompatSpinner implements AdapterView.On
                     mImageCache.put(username, accountHead);
                 }
                 textview.setCompoundDrawables(accountHead, null, null, null);
+                deleteButton.setVisibility(View.VISIBLE);
+                deleteButton.setOnClickListener(v -> {
+                    showDeleteDialog(getContext(), position);
+                });
             }
             return convertView;
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+            View view = getDropDownView(position, convertView, parent);
+            view.findViewById(R.id.delete_account_button).setVisibility(View.GONE);
+            return view;
+        }
+
+        private void showDeleteDialog(Context context, int position) {
+            new AlertDialog.Builder(context)
+                    .setMessage(R.string.warning_remove_account)
+                    .setPositiveButton(android.R.string.cancel, null)
+                    .setNeutralButton(R.string.global_delete, (dialog, which) -> {
+                        onDetachedFromWindow();
+                        removeAccount(position);
+                    })
+                    .show();
         }
     }
 }
