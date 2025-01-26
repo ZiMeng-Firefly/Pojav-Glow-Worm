@@ -25,6 +25,7 @@ import android.widget.Toast;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -204,10 +205,13 @@ public class mcAccountSpinner extends AppCompatSpinner implements AdapterView.On
         canvas.drawLine(0, bottom, mLoginBarWidth, bottom, mLoginBarPaint);
     }
 
-    public void removeCurrentAccount() {
-        int position = getSelectedItemPosition();
+    public void removeCurrentAccount(){
+        removeAccount(getSelectedItemPosition());
+    }
+
+    private void removeAccount(int position) {
         if (position == 0) return;
-        File accountFile = new File(Tools.DIR_ACCOUNT_NEW, mAccountList.get(position) + ".json");
+        File accountFile = new File(Tools.DIR_ACCOUNT_NEW, mAccountList.get(position)+".json");
         if (accountFile.exists()) accountFile.delete();
         mAccountList.remove(position);
 

@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MinecraftDownloader {
+    private static final double ONE_MEGABYTE = (1024d * 1024d);
     public static final String MINECRAFT_RES = "https://resources.download.minecraft.net/";
     private AtomicReference<Exception> mDownloaderThreadException;
     private ArrayList<DownloaderTask> mScheduledDownloadTasks;

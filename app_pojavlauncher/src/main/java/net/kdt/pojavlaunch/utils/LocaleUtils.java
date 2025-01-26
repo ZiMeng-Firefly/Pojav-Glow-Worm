@@ -1,7 +1,7 @@
 package net.kdt.pojavlaunch.utils;
 
-
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.DEFAULT_PREF;
+import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_FORCE_ENGLISH;
 
 import android.content.Context;
 import android.content.ContextWrapper;
