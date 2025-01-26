@@ -49,9 +49,6 @@
 // This means that you are forced to have this function/variable for ABI compatibility
 #define ABI_COMPAT __attribute__((unused))
 
-EGLConfig config;
-struct PotatoBridge potatoBridge;
-
 void bigcore_set_affinity();
 
 void* loadTurnipVulkan();
@@ -113,11 +110,6 @@ void ConfigBridgeTbl() {
         printf("Config Bridge: Config not found, using default config\n");
         pojav_environ->config_bridge = BRIDGE_TBL_DEFAULT;
     }
-}
-
-int SpareBuffer() {
-    if (getenv("POJAV_SPARE_FRAME_BUFFER") != NULL) return 1;
-    return 0;
 }
 
 JNIEXPORT void JNICALL
