@@ -54,6 +54,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_LDLIBS := -ldl -llog -landroid
 LOCAL_MODULE := bridge_context
+LOCAL_SHARED_LIBRARIES := pojavexec
 LOCAL_CFLAGS += -g -rdynamic
 
 LOCAL_SRC_FILES := \
