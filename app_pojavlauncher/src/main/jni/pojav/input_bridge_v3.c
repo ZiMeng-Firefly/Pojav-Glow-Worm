@@ -24,7 +24,6 @@
 #include "utils.h"
 #include "environ/environ.h"
 #include "jvm_hooks/jvm_hooks.h"
-#include "common/jvm_common.h"
 
 #define EVENT_TYPE_CHAR 1000
 #define EVENT_TYPE_CHAR_MODS 1001
