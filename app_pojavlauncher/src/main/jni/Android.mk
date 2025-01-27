@@ -80,7 +80,6 @@ LOCAL_CFLAGS += -g -rdynamic
 LOCAL_SRC_FILES := \
     pojav/bigcoreaffinity.c \
     pojav/egl_bridge.c \
-    pojav/input_bridge_v3.c \
     pojav/jre_launcher.c \
     pojav/utils.c \
     pojav/stdio_is.c
