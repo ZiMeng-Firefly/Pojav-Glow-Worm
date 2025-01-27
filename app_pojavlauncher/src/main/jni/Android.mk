@@ -37,6 +37,16 @@ include $(BUILD_SHARED_LIBRARY)
 
 
 include $(CLEAR_VARS)
+LOCAL_MODULE := jvm_hook
+LOCAL_LDLIBS := -ldl -llog
+LOCAL_SRC_FILES := \
+    jvm_hooks/emui_iterator_fix_hook.c \
+    jvm_hooks/java_exec_hooks.c \
+    jvm_hooks/lwjgl_dlopen_hook.c
+include $(BUILD_SHARED_LIBRARY)
+
+
+include $(CLEAR_VARS)
 LOCAL_LDLIBS := -ldl -llog -landroid
 LOCAL_MODULE := bridge_config
 LOCAL_SHARED_LIBRARIES := br_common
@@ -74,7 +84,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_LDLIBS := -ldl -llog -landroid
 LOCAL_MODULE := pgw
-LOCAL_SHARED_LIBRARIES := driver_helper bridge_config br_common
+LOCAL_SHARED_LIBRARIES := jvm_hook driver_helper bridge_config br_common
 LOCAL_CFLAGS += -g -rdynamic
 
 LOCAL_SRC_FILES := \
@@ -98,17 +108,6 @@ LOCAL_SRC_FILES := \
     linkerhook/linkerhook.cpp \
     linkerhook/linkerns.c
 LOCAL_LDFLAGS := -z global
-include $(BUILD_SHARED_LIBRARY)
-
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := jvm_hook
-LOCAL_LDLIBS := -ldl -llog
-LOCAL_SHARED_LIBRARIES := pgw
-LOCAL_SRC_FILES := \
-    jvm_hooks/emui_iterator_fix_hook.c \
-    jvm_hooks/java_exec_hooks.c \
-    jvm_hooks/lwjgl_dlopen_hook.c
 include $(BUILD_SHARED_LIBRARY)
 
 
