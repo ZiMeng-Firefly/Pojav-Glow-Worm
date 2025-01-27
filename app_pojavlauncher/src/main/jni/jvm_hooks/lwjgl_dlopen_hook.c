@@ -16,6 +16,8 @@
 #include "pojav/log.h"
 #include "common/jvm_common.h"
 
+void* maybe_load_vulkan();
+
 /**
  * Basically a verbatim implementation of ndlopen(), found at
  * https://github.com/PojavLauncherTeam/lwjgl3/blob/3.3.1/modules/lwjgl/core/src/generated/c/linux/org_lwjgl_system_linux_DynamicLinkLoader.c#L11

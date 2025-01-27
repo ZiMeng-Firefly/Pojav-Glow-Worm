@@ -12,6 +12,9 @@
 #include "pojav/utils.h"
 #include "common/jvm_common.h"
 
+JNIEXPORT jstring JNICALL
+Java_org_lwjgl_glfw_CallbackBridge_nativeClipboard(JNIEnv* env, __attribute__((unused)) jclass clazz, jint action, jbyteArray copySrc);
+
 static jint (*orig_ProcessImpl_forkAndExec)(JNIEnv *env, jobject process, jint mode, jbyteArray helperpath, jbyteArray prog, jbyteArray argBlock, jint argc, jbyteArray envBlock, jint envc, jbyteArray dir, jintArray std_fds, jboolean redirectErrorStream);
 
 // Turn a C-style string into a Java byte array
