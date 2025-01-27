@@ -863,6 +863,7 @@ public class JREUtils {
 
     static {
         System.loadLibrary("native_hook");
+        System.loadLibrary("jvm_hook");
         System.loadLibrary("pgw");
         System.loadLibrary("pojavexec_awt");
     }

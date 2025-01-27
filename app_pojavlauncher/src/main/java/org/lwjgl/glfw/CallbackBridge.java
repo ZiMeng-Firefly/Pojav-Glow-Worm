@@ -231,6 +231,7 @@ public class CallbackBridge {
 
     static {
         System.loadLibrary("pgw");
+        System.loadLibrary("jvm_hook");
     }
 }
 
