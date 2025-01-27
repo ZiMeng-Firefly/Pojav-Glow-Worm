@@ -14,6 +14,7 @@
 
 #define TAG __FILE_NAME__
 #include "pojav/log.h"
+#include "pojav/input_bridge_v3.h"
 
 extern void* maybe_load_vulkan();
 
