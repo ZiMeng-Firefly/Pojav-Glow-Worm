@@ -32,13 +32,20 @@ LOCAL_LDLIBS := -ldl -llog -landroid
 LOCAL_MODULE := br_common
 LOCAL_SRC_FILES := \
     environ/environ.c \
-    ctxbridges/bridge_common.c 
+    common/bridge_common.c 
+include $(BUILD_SHARED_LIBRARY)
+
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := jvm_common
+LOCAL_SRC_FILES := common/jvm_common.c 
 include $(BUILD_SHARED_LIBRARY)
 
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := jvm_hook
 LOCAL_LDLIBS := -ldl -llog
+LOCAL_SHARED_LIBRARIES := jvm_common br_common
 LOCAL_SRC_FILES := \
     jvm_hooks/emui_iterator_fix_hook.c \
     jvm_hooks/java_exec_hooks.c \
@@ -84,7 +91,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_LDLIBS := -ldl -llog -landroid
 LOCAL_MODULE := pgw
-LOCAL_SHARED_LIBRARIES := driver_helper bridge_config jvm_hook br_common
+LOCAL_SHARED_LIBRARIES := driver_helper bridge_config jvm_hook jvm_common br_common
 LOCAL_CFLAGS += -g -rdynamic
 
 LOCAL_SRC_FILES := \

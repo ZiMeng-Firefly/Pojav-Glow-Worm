@@ -36,10 +36,6 @@
 
 static void registerFunctions(JNIEnv *env);
 
-void installEMUIIteratorMititgation(JNIEnv *env);
-void installLwjglDlopenHook(JNIEnv *env);
-void hookExec(JNIEnv *env);
-
 jint JNI_OnLoad(JavaVM* vm, __attribute__((unused)) void* reserved) {
     if (pojav_environ->dalvikJavaVMPtr == NULL)
     {
@@ -255,7 +251,8 @@ void noncritical_set_stackqueue(__attribute__((unused)) JNIEnv *env, __attribute
     critical_set_stackqueue(use_input_stack_queue);
 }
 
-JNIEXPORT jstring JNICALL Java_org_lwjgl_glfw_CallbackBridge_nativeClipboard(JNIEnv* env, __attribute__((unused)) jclass clazz, jint action, jbyteArray copySrc) {
+JNIEXPORT jstring JNICALL
+Java_org_lwjgl_glfw_CallbackBridge_nativeClipboard(JNIEnv* env, __attribute__((unused)) jclass clazz, jint action, jbyteArray copySrc) {
 #ifdef DEBUG
     LOGD("Debug: Clipboard access is going on\n", pojav_environ->isUseStackQueueCall);
 #endif
