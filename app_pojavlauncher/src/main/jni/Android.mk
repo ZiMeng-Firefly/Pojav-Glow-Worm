@@ -83,9 +83,7 @@ LOCAL_SRC_FILES := \
     pojav/input_bridge_v3.c \
     pojav/jre_launcher.c \
     pojav/utils.c \
-    pojav/stdio_is.c \
-    hook/java_exec_hooks.c \
-    hook/lwjgl_dlopen_hook.c
+    pojav/stdio_is.c
 
 ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
 LOCAL_CFLAGS += -DADRENO_POSSIBLE
@@ -104,10 +102,23 @@ include $(BUILD_SHARED_LIBRARY)
 
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := exithook
+LOCAL_MODULE := jvm_hook
+LOCAL_LDLIBS := -ldl -llog
+LOCAL_SHARED_LIBRARIES := pgw
+LOCAL_SRC_FILES := \
+    jvm_hooks/emui_iterator_fix_hook.c \
+    jvm_hooks/java_exec_hooks.c \
+    jvm_hooks/lwjgl_dlopen_hook.c
+include $(BUILD_SHARED_LIBRARY)
+
+
+include $(CLEAR_VARS)
+LOCAL_MODULE := native_hook
 LOCAL_LDLIBS := -ldl -llog
 LOCAL_SHARED_LIBRARIES := bytehook pgw
-LOCAL_SRC_FILES := hook/exit_hook.c
+LOCAL_SRC_FILES := \
+    native_hooks/exit_hook.c \
+    native_hooks/chmod_hook.c
 include $(BUILD_SHARED_LIBRARY)
 
 
