@@ -45,7 +45,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE := jvm_hook
 LOCAL_LDLIBS := -ldl -llog
-LOCAL_SHARED_LIBRARIES := jvm_common br_common
+LOCAL_SHARED_LIBRARIES := jvm_common
 LOCAL_SRC_FILES := \
     jvm_hooks/emui_iterator_fix_hook.c \
     jvm_hooks/java_exec_hooks.c \

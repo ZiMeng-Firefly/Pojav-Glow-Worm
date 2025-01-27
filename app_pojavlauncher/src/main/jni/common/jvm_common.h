@@ -7,7 +7,7 @@
 
 #include <jni.h>
 
-extern void* maybe_load_vulkan();
+void* maybe_load_vulkan();
 
 JNIEXPORT jstring JNICALL
 Java_org_lwjgl_glfw_CallbackBridge_nativeClipboard(JNIEnv* env, __attribute__((unused)) jclass clazz, jint action, jbyteArray copySrc);

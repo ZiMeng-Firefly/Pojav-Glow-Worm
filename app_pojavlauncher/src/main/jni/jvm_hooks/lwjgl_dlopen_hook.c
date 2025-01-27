@@ -14,6 +14,7 @@
 
 #define TAG __FILE_NAME__
 #include "pojav/log.h"
+#include "common/jvm_common.h"
 
 /**
  * Basically a verbatim implementation of ndlopen(), found at
