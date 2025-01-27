@@ -20,8 +20,8 @@
 #include <math.h>
 
 #define TAG __FILE_NAME__
-#include "log.h"
-#include "utils.h"
+#include "pojav/log.h"
+#include "pojav/utils.h"
 #include "environ/environ.h"
 #include "jvm_hooks/jvm_hooks.h"
 
