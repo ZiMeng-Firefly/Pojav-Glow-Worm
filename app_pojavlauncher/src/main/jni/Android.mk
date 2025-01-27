@@ -103,7 +103,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE := jvm_hook
 LOCAL_LDLIBS := -ldl -llog
-LOCAL_SHARED_LIBRARIES := pgw
+LOCAL_SHARED_LIBRARIES := br_common pgw
 LOCAL_SRC_FILES := \
     jvm_hooks/emui_iterator_fix_hook.c \
     jvm_hooks/input_bridge_v3.c \
