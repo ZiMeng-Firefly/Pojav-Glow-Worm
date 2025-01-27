@@ -10,7 +10,6 @@
 
 #include "environ/environ.h"
 #include "pojav/utils.h"
-#include "pojav/input_bridge_v3.h"
 
 static jint (*orig_ProcessImpl_forkAndExec)(JNIEnv *env, jobject process, jint mode, jbyteArray helperpath, jbyteArray prog, jbyteArray argBlock, jint argc, jbyteArray envBlock, jint envc, jbyteArray dir, jintArray std_fds, jboolean redirectErrorStream);
 

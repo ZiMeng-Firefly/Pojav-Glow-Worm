@@ -22,7 +22,6 @@
 #define TAG __FILE_NAME__
 #include "log.h"
 #include "utils.h"
-#include "input_bridge_v3.h"
 #include "environ/environ.h"
 #include "jvm_hooks/jvm_hooks.h"
 
