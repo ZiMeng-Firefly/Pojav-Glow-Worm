@@ -37,23 +37,6 @@ include $(BUILD_SHARED_LIBRARY)
 
 
 include $(CLEAR_VARS)
-LOCAL_MODULE := jvm_common
-LOCAL_SRC_FILES := common/jvm_common.c 
-include $(BUILD_SHARED_LIBRARY)
-
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := jvm_hook
-LOCAL_LDLIBS := -ldl -llog
-LOCAL_SHARED_LIBRARIES := jvm_common
-LOCAL_SRC_FILES := \
-    jvm_hooks/emui_iterator_fix_hook.c \
-    jvm_hooks/java_exec_hooks.c \
-    jvm_hooks/lwjgl_dlopen_hook.c
-include $(BUILD_SHARED_LIBRARY)
-
-
-include $(CLEAR_VARS)
 LOCAL_LDLIBS := -ldl -llog -landroid
 LOCAL_MODULE := bridge_config
 LOCAL_SHARED_LIBRARIES := br_common
@@ -91,10 +74,13 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_LDLIBS := -ldl -llog -landroid
 LOCAL_MODULE := pgw
-LOCAL_SHARED_LIBRARIES := driver_helper bridge_config jvm_hook jvm_common br_common
+LOCAL_SHARED_LIBRARIES := driver_helper bridge_config br_common
 LOCAL_CFLAGS += -g -rdynamic
 
 LOCAL_SRC_FILES := \
+    jvm_hooks/emui_iterator_fix_hook.c \
+    jvm_hooks/java_exec_hooks.c \
+    jvm_hooks/lwjgl_dlopen_hook.c \
     pojav/bigcoreaffinity.c \
     pojav/egl_bridge.c \
     pojav/input_bridge_v3.c \
