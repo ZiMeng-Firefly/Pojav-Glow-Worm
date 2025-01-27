@@ -862,7 +862,7 @@ public class JREUtils {
     public static native int[] renderAWTScreenFrame(/* Object canvas, int width, int height */);
 
     static {
-        System.loadLibrary("exithook");
+        System.loadLibrary("native_hook");
         System.loadLibrary("pgw");
         System.loadLibrary("pojavexec_awt");
     }
