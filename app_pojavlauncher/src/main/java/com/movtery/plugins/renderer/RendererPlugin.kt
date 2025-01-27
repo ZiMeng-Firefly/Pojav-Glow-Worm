@@ -9,7 +9,7 @@ import net.kdt.pojavlaunch.Tools
 import net.kdt.pojavlaunch.R
 
 /**
- * FCL、ZalithLauncher 渲染器插件
+ * FCL、ZalithLauncher, PGW 等渲染器插件
  * [FCL Renderer Plugin](https://github.com/FCL-Team/FCLRendererPlugin)
  */
 object RendererPlugin {
@@ -49,9 +49,10 @@ object RendererPlugin {
             val activityInfo = it.activityInfo
             val packageName = activityInfo.packageName
             if (
-                packageName.startsWith("com.movtery.zalithplugin.renderer") ||
-                packageName.startsWith("com.mio.plugin.renderer") ||
-                packageName.startsWith("com.firefly.pgwplugin.renderer")
+                packageName.startsWith("com.movtery.zalithplugin") ||
+                packageName.startsWith("com.mio.plugin") ||
+                packageName.startsWith("com.firefly.pgwplugin") ||
+                packageName.startsWith("com.bzlzhh.plugin")
             ) {
                 //尝试进行解析渲染器插件
                 parsePlugin(context, it.activityInfo.applicationInfo)

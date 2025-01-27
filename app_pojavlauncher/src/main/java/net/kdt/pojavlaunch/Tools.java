@@ -554,10 +554,10 @@ public final class Tools {
     public static void setFullscreen(Activity activity, boolean fullscreen) {
         final View decorView = activity.getWindow().getDecorView();
         View.OnSystemUiVisibilityChangeListener visibilityChangeListener = visibility -> {
-            // boolean multiWindowMode = SDK_INT >= 24 && activity.isInMultiWindowMode();
+            boolean multiWindowMode = SDK_INT >= 24 && activity.isInMultiWindowMode();
             // When in multi-window mode, asking for fullscreen makes no sense (cause the launcher runs in a window)
             // So, ignore the fullscreen setting when activity is in multi window mode
-            if (fullscreen) {
+            if (fullscreen && !multiWindowMode) {
                 if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
                     decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_FULLSCREEN

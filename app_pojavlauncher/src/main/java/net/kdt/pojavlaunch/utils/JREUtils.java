@@ -863,7 +863,7 @@ public class JREUtils {
 
     static {
         System.loadLibrary("exithook");
-        System.loadLibrary("pojavexec");
+        System.loadLibrary("pgw");
         System.loadLibrary("pojavexec_awt");
     }
 }

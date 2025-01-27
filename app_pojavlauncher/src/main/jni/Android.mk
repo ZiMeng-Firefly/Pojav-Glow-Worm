@@ -29,24 +29,10 @@ include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_LDLIBS := -ldl -llog -landroid
-LOCAL_MODULE := pojavexec
-LOCAL_SHARED_LIBRARIES := driver_helper bridge_config br_common
-LOCAL_CFLAGS += -g -rdynamic
-
+LOCAL_MODULE := br_common
 LOCAL_SRC_FILES := \
-    pojav/bigcoreaffinity.c \
-    pojav/egl_bridge.c \
-    pojav/input_bridge_v3.c \
-    pojav/jre_launcher.c \
-    pojav/utils.c \
-    pojav/stdio_is.c \
-    hook/java_exec_hooks.c \
-    hook/lwjgl_dlopen_hook.c
-
-ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
-LOCAL_CFLAGS += -DADRENO_POSSIBLE
-LOCAL_LDLIBS += -lEGL -lGLESv2
-endif
+    environ/environ.c \
+    ctxbridges/bridge_common.c 
 include $(BUILD_SHARED_LIBRARY)
 
 
@@ -72,20 +58,34 @@ include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_LDLIBS := -ldl -llog -landroid
-LOCAL_MODULE := br_common
-LOCAL_SRC_FILES := \
-    environ/environ.c \
-    ctxbridges/bridge_common.c 
-include $(BUILD_SHARED_LIBRARY)
-
-
-include $(CLEAR_VARS)
-LOCAL_LDLIBS := -ldl -llog -landroid
 LOCAL_MODULE := driver_helper
 LOCAL_SRC_FILES := \
     driver_helper/driver_helper.c \
     driver_helper/nsbypass.c
 LOCAL_CFLAGS += -g -rdynamic
+
+ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
+LOCAL_CFLAGS += -DADRENO_POSSIBLE
+LOCAL_LDLIBS += -lEGL -lGLESv2
+endif
+include $(BUILD_SHARED_LIBRARY)
+
+
+include $(CLEAR_VARS)
+LOCAL_LDLIBS := -ldl -llog -landroid
+LOCAL_MODULE := pgw
+LOCAL_SHARED_LIBRARIES := driver_helper bridge_config br_common
+LOCAL_CFLAGS += -g -rdynamic
+
+LOCAL_SRC_FILES := \
+    pojav/bigcoreaffinity.c \
+    pojav/egl_bridge.c \
+    pojav/input_bridge_v3.c \
+    pojav/jre_launcher.c \
+    pojav/utils.c \
+    pojav/stdio_is.c \
+    hook/java_exec_hooks.c \
+    hook/lwjgl_dlopen_hook.c
 
 ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
 LOCAL_CFLAGS += -DADRENO_POSSIBLE
@@ -106,7 +106,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE := exithook
 LOCAL_LDLIBS := -ldl -llog
-LOCAL_SHARED_LIBRARIES := bytehook pojavexec
+LOCAL_SHARED_LIBRARIES := bytehook pgw
 LOCAL_SRC_FILES := hook/exit_hook.c
 include $(BUILD_SHARED_LIBRARY)
 

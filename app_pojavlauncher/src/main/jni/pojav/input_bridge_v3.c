@@ -578,9 +578,9 @@ static void registerFunctions(JNIEnv *env) {
 
     if (use_critical_cc)
     {
-        __android_log_print(ANDROID_LOG_INFO, "pojavexec", "CriticalNative is available. Enjoy the 4.6x times faster input!");
+        __android_log_print(ANDROID_LOG_INFO, "pgw", "CriticalNative is available. Enjoy the 4.6x times faster input!");
     } else {
-        __android_log_print(ANDROID_LOG_INFO, "pojavexec", "CriticalNative is not available. Upgrade, maybe?");
+        __android_log_print(ANDROID_LOG_INFO, "pgw", "CriticalNative is not available. Upgrade, maybe?");
     }
 
     (*env)->RegisterNatives(env,
