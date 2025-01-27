@@ -14,9 +14,8 @@
 
 #define TAG __FILE_NAME__
 #include "pojav/log.h"
-#include "common/jvm_common.h"
 
-void* maybe_load_vulkan();
+extern void* maybe_load_vulkan();
 
 /**
  * Basically a verbatim implementation of ndlopen(), found at
