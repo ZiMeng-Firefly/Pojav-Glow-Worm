@@ -20,8 +20,8 @@
 #include <math.h>
 
 #define TAG __FILE_NAME__
-#include "pojav/log.h"
-#include "pojav/utils.h"
+#include "log.h"
+#include "utils.h"
 #include "environ/environ.h"
 #include "jvm_hooks/jvm_hooks.h"
 
@@ -35,6 +35,10 @@
 #define EVENT_TYPE_WINDOW_SIZE 1008
 
 static void registerFunctions(JNIEnv *env);
+
+void installEMUIIteratorMititgation(JNIEnv *env);
+void installLwjglDlopenHook(JNIEnv *env);
+void hookExec(JNIEnv *env);
 
 jint JNI_OnLoad(JavaVM* vm, __attribute__((unused)) void* reserved) {
     if (pojav_environ->dalvikJavaVMPtr == NULL)
