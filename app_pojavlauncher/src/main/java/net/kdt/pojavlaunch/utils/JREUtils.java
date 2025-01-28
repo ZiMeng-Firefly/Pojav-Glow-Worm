@@ -448,19 +448,14 @@ public class JREUtils {
     private static void setEnv(String jreHome, final Runtime runtime) throws Throwable {
         Map<String, String> envMap = new ArrayMap<>();
 
-        try {
-            setJavaEnv(envMap, jreHome);
-            setCustomEnv(envMap);
-            checkAndUsedJSPH(envMap, runtime);
+        setJavaEnv(envMap, jreHome);
+        setCustomEnv(envMap);
+        checkAndUsedJSPH(envMap, runtime);
 
-            if (PGWTools.isAdrenoGPU() && TURNIP_LIBS != null)
-                loadCustomTurnip(envMap);
-            if (LOCAL_RENDERER != null)
-                setRendererEnv(envMap);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if (PGWTools.isAdrenoGPU() && TURNIP_LIBS != null)
+            loadCustomTurnip(envMap);
+        if (LOCAL_RENDERER != null)
+            setRendererEnv(envMap);
 
         for (Map.Entry<String, String> env : envMap.entrySet()) {
             Logger.appendToLog("Added custom env: " + env.getKey() + "=" + env.getValue());
@@ -494,7 +489,7 @@ public class JREUtils {
         }
     }
 
-    private static int launch(final Activity activity, String runtimeHome, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
+    private static int launchJavaVM(final Activity activity, String runtimeHome, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
         List<String> userArgs = getJavaArgs(activity, runtimeHome, userArgsString);
 
         //Remove arguments that can interfere with the good working of the launcher
@@ -545,7 +540,7 @@ public class JREUtils {
         return exitCode;
     }
 
-    public static void launchJavaVM(final Activity activity, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
+    public static void launchWithUtils(final Activity activity, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
         String runtimeHome = MultiRTUtils.getRuntimeHome(runtime.name).getAbsolutePath();
         try {
 
@@ -557,7 +552,7 @@ public class JREUtils {
 
             initGraphicAndSoundEngine();
 
-            launch(activity, runtimeHome, runtime, gameDirectory, JVMArgs, userArgsString);
+            launchJavaVM(activity, runtimeHome, runtime, gameDirectory, JVMArgs, userArgsString);
 
         } catch (IOException e) {
             e.printStackTrace();
