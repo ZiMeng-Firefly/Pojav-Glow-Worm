@@ -236,6 +236,12 @@ public class JREUtils {
             envMap.put("POJAV_EMUI_ITERATOR_MITIGATE", "1");
         if (FFmpegPlugin.isAvailable)
             envMap.put("POJAV_FFMPEG_PATH", FFmpegPlugin.executablePath);
+
+        File serverFile = new File(jreHome + "/" + Tools.DIRNAME_HOME_JRE + "/server/libjvm.so");
+        jvmLibraryPath = jreHome + "/" + Tools.DIRNAME_HOME_JRE + "/" + (serverFile.exists() ? "server" : "client");
+        Log.d("DynamicLoader", "Base LD_LIBRARY_PATH: " + LD_LIBRARY_PATH);
+        Log.d("DynamicLoader", "Internal LD_LIBRARY_PATH: " + jvmLibraryPath + ":" + LD_LIBRARY_PATH);
+        setLdLibraryPath(jvmLibraryPath + ":" + LD_LIBRARY_PATH);
     }
 
     private static void setRendererEnv(Map<String, String> envMap) {
@@ -442,14 +448,19 @@ public class JREUtils {
     private static void setEnv(String jreHome, final Runtime runtime) throws Throwable {
         Map<String, String> envMap = new ArrayMap<>();
 
-        setJavaEnv(envMap, jreHome);
-        setCustomEnv(envMap);
-        checkAndUsedJSPH(envMap, runtime);
+        try {
+            setJavaEnv(envMap, jreHome);
+            setCustomEnv(envMap);
+            checkAndUsedJSPH(envMap, runtime);
 
-        if (PGWTools.isAdrenoGPU() && TURNIP_LIBS != null)
-            loadCustomTurnip(envMap);
-        if (LOCAL_RENDERER != null)
-            setRendererEnv(envMap);
+            if (PGWTools.isAdrenoGPU() && TURNIP_LIBS != null)
+                loadCustomTurnip(envMap);
+            if (LOCAL_RENDERER != null)
+                setRendererEnv(envMap);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         for (Map.Entry<String, String> env : envMap.entrySet()) {
             Logger.appendToLog("Added custom env: " + env.getKey() + "=" + env.getValue());
@@ -512,15 +523,6 @@ public class JREUtils {
         activity.runOnUiThread(() -> Toast.makeText(activity, activity.getString(R.string.autoram_info_msg, LauncherPreferences.PREF_RAM_ALLOCATION), Toast.LENGTH_SHORT).show());
         System.out.println(JVMArgs);
 
-        initJavaRuntime(runtimeHome);
-        initGraphicAndSoundEngine();
-
-        File serverFile = new File(runtimeHome + "/" + Tools.DIRNAME_HOME_JRE + "/server/libjvm.so");
-        jvmLibraryPath = runtimeHome + "/" + Tools.DIRNAME_HOME_JRE + "/" + (serverFile.exists() ? "server" : "client");
-        Log.d("DynamicLoader", "Base LD_LIBRARY_PATH: " + LD_LIBRARY_PATH);
-        Log.d("DynamicLoader", "Internal LD_LIBRARY_PATH: " + jvmLibraryPath + ":" + LD_LIBRARY_PATH);
-        setLdLibraryPath(jvmLibraryPath + ":" + LD_LIBRARY_PATH);
-
         JREUtils.setupExitMethod(activity.getApplication());
         JREUtils.initializeHooks();
         chdir(gameDirectory == null ? ProfilePathHome.getGameHome() : gameDirectory.getAbsolutePath());
@@ -550,11 +552,11 @@ public class JREUtils {
             JREUtils.relocateLibPath(runtime, runtimeHome);
 
             setEnv(runtimeHome, runtime);
-/*
+
             initJavaRuntime(runtimeHome);
 
             initGraphicAndSoundEngine();
-*/
+
             launch(activity, runtimeHome, runtime, gameDirectory, JVMArgs, userArgsString);
 
         } catch (IOException e) {
