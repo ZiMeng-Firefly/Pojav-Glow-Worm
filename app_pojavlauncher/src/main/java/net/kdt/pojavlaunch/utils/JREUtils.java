@@ -123,7 +123,6 @@ public class JREUtils {
         for (File f : locateLibs(new File(jreHome, Tools.DIRNAME_HOME_JRE))) {
             dlopen(f.getAbsolutePath());
         }
-        dlopen(NATIVE_LIB_DIR + "/libopenal.so");
     }
 
     public static void redirectAndPrintJRELog() {
@@ -236,14 +235,6 @@ public class JREUtils {
             envMap.put("POJAV_EMUI_ITERATOR_MITIGATE", "1");
         if (FFmpegPlugin.isAvailable)
             envMap.put("POJAV_FFMPEG_PATH", FFmpegPlugin.executablePath);
-    }
-
-    {
-        File serverFile = new File(jreHome + "/" + Tools.DIRNAME_HOME_JRE + "/server/libjvm.so");
-        jvmLibraryPath = jreHome + "/" + Tools.DIRNAME_HOME_JRE + "/" + (serverFile.exists() ? "server" : "client");
-        Log.d("DynamicLoader", "Base LD_LIBRARY_PATH: " + LD_LIBRARY_PATH);
-        Log.d("DynamicLoader", "Internal LD_LIBRARY_PATH: " + jvmLibraryPath + ":" + LD_LIBRARY_PATH);
-        setLdLibraryPath(jvmLibraryPath + ":" + LD_LIBRARY_PATH);
     }
 
     private static void setRendererEnv(Map<String, String> envMap) {
@@ -434,7 +425,7 @@ public class JREUtils {
         File[] files = dir.listFiles((dir1, name) -> name.startsWith(jsphName));
         if (files != null && files.length > 0) {
             String libName = NATIVE_LIB_DIR + "/" + jsphName + ".so";
-            envMap.put("JSP", libName, true);
+            envMap.put("JSP", libName);
         } else {
             System.out.println("Native: Library " + jsphName + ".so not found, some mod cannot used");
         }
@@ -444,14 +435,14 @@ public class JREUtils {
         if (TURNIP_LIBS.equals("default") || PREF_ZINK_PREFER_SYSTEM_DRIVER) return;
         String folder = TurnipUtils.INSTANCE.getTurnipDriver(TURNIP_LIBS);
         if (folder == null) return;
-        envMap.put("TURNIP_DIR", folder, true);
+        envMap.put("TURNIP_DIR", folder);
     }
 
     private static void setEnv(String jreHome, final Runtime runtime) throws Throwable {
         Map<String, String> envMap = new ArrayMap<>();
 
         setJavaEnv(envMap, jreHome);
-        setCustomEnvenvMap(envMap);
+        setCustomEnv(envMap);
         checkAndUsedJSPH(envMap, runtime);
 
         if (PGWTools.isAdrenoGPU() && TURNIP_LIBS != null)
@@ -469,12 +460,29 @@ public class JREUtils {
         }
     }
 
-    public static int launchJavaVM(final Activity activity, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
-        String runtimeHome = MultiRTUtils.getRuntimeHome(runtime.name).getAbsolutePath();
-        JREUtils.relocateLibPath(runtime, runtimeHome);
 
-        setEnv(runtimeHome, runtime);
+    private static void initGraphicAndSoundEngine() {
+        String rendererLib = loadGraphicsLibrary();
 
+        dlopen(NATIVE_LIB_DIR + "/libopenal.so");
+
+        RendererPlugin.Renderer customRenderer = RendererPlugin.getSelectedRenderer();
+        if (customRenderer != null) {
+            customRenderer.getEnv().forEach(envPair -> {
+                if (envPair.getFirst().equals("DLOPEN")) {
+                    String[] libs = envPair.getSecond().split(",");
+                    for (String lib : libs) {
+                        dlopen(customRenderer.getPath() + "/" + lib);
+                    }
+                }
+            });
+        }
+        if (!dlopen(rendererLib) && !dlopen(findInLdLibPath(rendererLib))) {
+            Log.e("RENDER_LIBRARY", "Failed to load renderer " + rendererLib);
+        }
+    }
+
+    private static int launch(final Activity activity, String runtimeHome, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
         List<String> userArgs = getJavaArgs(activity, runtimeHome, userArgsString);
 
         //Remove arguments that can interfere with the good working of the launcher
@@ -497,13 +505,18 @@ public class JREUtils {
 
         // Force LWJGL to use the Freetype library intended for it, instead of using the one
         // that we ship with Java (since it may be older than what's needed)
-        userArgs.add("-Dorg.lwjgl.freetype.libname="+ NATIVE_LIB_DIR+"/libfreetype.so");
+        userArgs.add("-Dorg.lwjgl.freetype.libname=" + NATIVE_LIB_DIR + "/libfreetype.so");
 
         userArgs.addAll(JVMArgs);
         activity.runOnUiThread(() -> Toast.makeText(activity, activity.getString(R.string.autoram_info_msg, LauncherPreferences.PREF_RAM_ALLOCATION), Toast.LENGTH_SHORT).show());
         System.out.println(JVMArgs);
 
-        initJavaRuntime(runtimeHome);
+        File serverFile = new File(runtimeHome + "/" + Tools.DIRNAME_HOME_JRE + "/server/libjvm.so");
+        jvmLibraryPath = runtimeHome + "/" + Tools.DIRNAME_HOME_JRE + "/" + (serverFile.exists() ? "server" : "client");
+        Log.d("DynamicLoader", "Base LD_LIBRARY_PATH: " + LD_LIBRARY_PATH);
+        Log.d("DynamicLoader", "Internal LD_LIBRARY_PATH: " + jvmLibraryPath + ":" + LD_LIBRARY_PATH);
+        setLdLibraryPath(jvmLibraryPath + ":" + LD_LIBRARY_PATH);
+
         JREUtils.setupExitMethod(activity.getApplication());
         JREUtils.initializeHooks();
         chdir(gameDirectory == null ? ProfilePathHome.getGameHome() : gameDirectory.getAbsolutePath());
@@ -524,6 +537,25 @@ public class JREUtils {
             });
         }
         return exitCode;
+    }
+
+    public static void launchJavaVM(final Activity activity, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
+        String runtimeHome = MultiRTUtils.getRuntimeHome(runtime.name).getAbsolutePath();
+        try {
+
+            JREUtils.relocateLibPath(runtime, runtimeHome);
+
+            setEnv(runtimeHome, runtime);
+
+            initJavaRuntime(runtimeHome);
+
+            initGraphicAndSoundEngine();
+
+            launch(activity, runtimeHome, runtime, gameDirectory, JVMArgs, userArgsString);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -658,14 +690,6 @@ public class JREUtils {
         String renderLibrary;
         if (customRenderer != null) {
             renderLibrary = customRenderer.getGlName();
-            customRenderer.getEnv().forEach(envPair -> {
-                if (envPair.getFirst().equals("DLOPEN")) {
-                    String[] libs = envPair.getSecond().split(",");
-                    for (String lib : libs) {
-                        dlopen(customRenderer.getPath() + "/" + lib);
-                    }
-                }
-            });
         } else if (LOCAL_RENDERER.equals("mesa_3d")) {
             switch (MESA_LIBS) {
                 case "default":
@@ -722,13 +746,6 @@ public class JREUtils {
                     renderLibrary = "libgl4es_114.so";
                     break;
             }
-        }
-
-        if (!dlopen(renderLibrary) && !dlopen(findInLdLibPath(renderLibrary))) {
-            Log.e("RENDER_LIBRARY", "Failed to load renderer " + renderLibrary + ". Falling back to GL4ES 1.1.4");
-            LOCAL_RENDERER = "opengles2";
-            renderLibrary = "libgl4es_114.so";
-            dlopen(NATIVE_LIB_DIR + "/libgl4es_114.so");
         }
         return renderLibrary;
     }
