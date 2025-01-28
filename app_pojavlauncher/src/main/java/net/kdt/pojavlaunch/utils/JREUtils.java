@@ -205,9 +205,7 @@ public class JREUtils {
         LD_LIBRARY_PATH = ldLibraryPath.toString();
     }
 
-    private static void setJavaEnv(String jreHome) throws Throwable {
-        Map<String, String> envMap = new ArrayMap<>();
-
+    private static void setJavaEnv(Map<String, String> envMap, String jreHome) {
         envMap.put("POJAV_NATIVEDIR", NATIVE_LIB_DIR);
         envMap.put("JAVA_HOME", jreHome);
         envMap.put("HOME", ProfilePathManager.getCurrentPath());
@@ -238,16 +236,9 @@ public class JREUtils {
             envMap.put("POJAV_EMUI_ITERATOR_MITIGATE", "1");
         if (FFmpegPlugin.isAvailable)
             envMap.put("POJAV_FFMPEG_PATH", FFmpegPlugin.executablePath);
+    }
 
-        for (Map.Entry<String, String> env : envMap.entrySet()) {
-            Logger.appendToLog("Added custom env: " + env.getKey() + "=" + env.getValue());
-            try {
-                Os.setenv(env.getKey(), env.getValue(), true);
-            } catch (NullPointerException exception) {
-                Log.e("JREUtils", exception.toString());
-            }
-        }
-
+    {
         File serverFile = new File(jreHome + "/" + Tools.DIRNAME_HOME_JRE + "/server/libjvm.so");
         jvmLibraryPath = jreHome + "/" + Tools.DIRNAME_HOME_JRE + "/" + (serverFile.exists() ? "server" : "client");
         Log.d("DynamicLoader", "Base LD_LIBRARY_PATH: " + LD_LIBRARY_PATH);
@@ -255,8 +246,7 @@ public class JREUtils {
         setLdLibraryPath(jvmLibraryPath + ":" + LD_LIBRARY_PATH);
     }
 
-    private static void setRendererEnv() throws Throwable {
-        Map<String, String> envMap = new ArrayMap<>();
+    private static void setRendererEnv(Map<String, String> envMap) {
         String eglName = null;
 
         if (LOCAL_RENDERER.startsWith("opengles2")) {
@@ -419,20 +409,9 @@ public class JREUtils {
                 envMap.put("LIBGL_ES", "3");
             }
         }
-
-        for (Map.Entry<String, String> env : envMap.entrySet()) {
-            Logger.appendToLog("Added custom env: " + env.getKey() + "=" + env.getValue());
-            try {
-                Os.setenv(env.getKey(), env.getValue(), true);
-            } catch (NullPointerException exception) {
-                Log.e("JREUtils", exception.toString());
-            }
-        }
-
     }
 
-    private static void setCustomEnv() throws Throwable {
-        Map<String, String> envMap = new ArrayMap<>();
+    private static void setCustomEnv(Map<String, String> envMap) {
         File customEnvFile = new File(ProfilePathManager.getCurrentPath(), "custom_env.txt");
         if (customEnvFile.exists() && customEnvFile.isFile()) {
             BufferedReader reader = new BufferedReader(new FileReader(customEnvFile));
@@ -444,6 +423,41 @@ public class JREUtils {
             }
             reader.close();
         } else return;
+    }
+
+    private static void checkAndUsedJSPH(Map<String, String> envMap, final Runtime runtime) {
+        boolean onUseJSPH = runtime.javaVersion > 11;
+        if (!onUseJSPH) return;
+        File dir = new File(NATIVE_LIB_DIR);
+        if (!dir.isDirectory()) return;
+        String jsphName = runtime.javaVersion == 17 ? "libjsph17" : "libjsph21";
+        File[] files = dir.listFiles((dir1, name) -> name.startsWith(jsphName));
+        if (files != null && files.length > 0) {
+            String libName = NATIVE_LIB_DIR + "/" + jsphName + ".so";
+            envMap.put("JSP", libName, true);
+        } else {
+            System.out.println("Native: Library " + jsphName + ".so not found, some mod cannot used");
+        }
+    }
+
+    private static void loadCustomTurnip(Map<String, String> envMap) {
+        if (TURNIP_LIBS.equals("default") || PREF_ZINK_PREFER_SYSTEM_DRIVER) return;
+        String folder = TurnipUtils.INSTANCE.getTurnipDriver(TURNIP_LIBS);
+        if (folder == null) return;
+        envMap.put("TURNIP_DIR", folder, true);
+    }
+
+    private static void setEnv(String jreHome, final Runtime runtime) throws Throwable {
+        Map<String, String> envMap = new ArrayMap<>();
+
+        setJavaEnv(envMap, jreHome);
+        setCustomEnvenvMap(envMap);
+        checkAndUsedJSPH(envMap, runtime);
+
+        if (PGWTools.isAdrenoGPU() && TURNIP_LIBS != null)
+            loadCustomTurnip(envMap);
+        if (LOCAL_RENDERER != null)
+            setRendererEnv(envMap);
 
         for (Map.Entry<String, String> env : envMap.entrySet()) {
             Logger.appendToLog("Added custom env: " + env.getKey() + "=" + env.getValue());
@@ -455,47 +469,11 @@ public class JREUtils {
         }
     }
 
-    private static void checkAndUsedJSPH(final Runtime runtime) throws Throwable {
-        boolean onUseJSPH = runtime.javaVersion > 11;
-        if (!onUseJSPH) return;
-        File dir = new File(NATIVE_LIB_DIR);
-        if (!dir.isDirectory()) return;
-        String jsphName = runtime.javaVersion == 17 ? "libjsph17" : "libjsph21";
-        File[] files = dir.listFiles((dir1, name) -> name.startsWith(jsphName));
-        if (files != null && files.length > 0) {
-            String libName = NATIVE_LIB_DIR + "/" + jsphName + ".so";
-            Logger.appendToLog("Added custom env: JSP=" + libName);
-            try {
-                Os.setenv("JSP", libName, true);
-            } catch (Exception e) {
-                System.err.println("Error setting environment variable: " + e.getMessage());
-            }
-        } else {
-            System.out.println("Native: Library " + jsphName + ".so not found, some mod cannot used");
-        }
-    }
-
-    private static void loadCustomTurnip() throws Throwable {
-        if (TURNIP_LIBS.equals("default") || PREF_ZINK_PREFER_SYSTEM_DRIVER) return;
-        String folder = TurnipUtils.INSTANCE.getTurnipDriver(TURNIP_LIBS);
-        if (folder == null) return;
-        Logger.appendToLog("Added custom env: TURNIP_DIR=" + folder);
-        try {
-            Os.setenv("TURNIP_DIR", folder, true);
-        } catch (Exception e) {
-            System.err.println("Error setting environment variable: " + e.getMessage());
-        }
-    }
-
     public static int launchJavaVM(final Activity activity, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
         String runtimeHome = MultiRTUtils.getRuntimeHome(runtime.name).getAbsolutePath();
         JREUtils.relocateLibPath(runtime, runtimeHome);
 
-        setJavaEnv(runtimeHome);
-        setCustomEnv();
-        checkAndUsedJSPH(runtime);
-        if (PGWTools.isAdrenoGPU() && TURNIP_LIBS != null) loadCustomTurnip();
-        if (LOCAL_RENDERER != null) setRendererEnv();
+        setEnv(runtimeHome, runtime);
 
         List<String> userArgs = getJavaArgs(activity, runtimeHome, userArgsString);
 
