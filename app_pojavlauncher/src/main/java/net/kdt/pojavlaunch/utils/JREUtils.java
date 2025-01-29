@@ -49,7 +49,6 @@ import org.lwjgl.glfw.CallbackBridge;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -484,7 +483,7 @@ public class JREUtils {
         }
     }
 
-    private static int launchJavaVM(final Activity activity, String runtimeHome, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
+    private static int launchJavaVM(final Activity activity, String runtimeHome, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
         List<String> userArgs = getJavaArgs(activity, runtimeHome, userArgsString);
 
         //Remove arguments that can interfere with the good working of the launcher
@@ -537,7 +536,6 @@ public class JREUtils {
 
     public static void launchWithUtils(final Activity activity, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
         String runtimeHome = MultiRTUtils.getRuntimeHome(runtime.name).getAbsolutePath();
-        try {
 
             JREUtils.relocateLibPath(runtime, runtimeHome);
 
@@ -547,11 +545,8 @@ public class JREUtils {
 
             initGraphicAndSoundEngine();
 
-            launchJavaVM(activity, runtimeHome, runtime, gameDirectory, JVMArgs, userArgsString);
+            launchJavaVM(activity, runtimeHome, gameDirectory, JVMArgs, userArgsString);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
