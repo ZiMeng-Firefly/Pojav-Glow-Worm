@@ -106,6 +106,8 @@ public class JREUtils {
     }
 
     public static void initJavaRuntime(String jreHome) {
+        PGWTools.onAppendToLog("Dlopen Library");
+
         dlopen(findInLdLibPath("libjli.so"));
         if (!dlopen("libjvm.so")) {
             Log.w("DynamicLoader", "Failed to load with no path, trying with full path");
@@ -442,6 +444,7 @@ public class JREUtils {
     }
 
     private static void setEnv(String jreHome, final Runtime runtime) throws Throwable {
+        PGWTools.onAppendToLog("Env Map");
         Map<String, String> envMap = new LinkedHashMap<>();
 
         setJavaEnv(envMap, jreHome);
@@ -486,6 +489,7 @@ public class JREUtils {
     }
 
     private static int launchJavaVM(final Activity activity, String runtimeHome, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
+        PGWTools.onAppendToLog("Launch JVM");
         List<String> userArgs = getJavaArgs(activity, runtimeHome, userArgsString);
 
         //Remove arguments that can interfere with the good working of the launcher
@@ -550,9 +554,10 @@ public class JREUtils {
             initJavaRuntime(runtimeHome);
             // Initialize renderer library files.
             initGraphicAndSoundEngine();
-        } finally {
             // Launch JVM.
             launchJavaVM(activity, runtimeHome, gameDirectory, JVMArgs, userArgsString);
+        } finally {
+            Logger.appendToLog("JREUtils: Launch With Utils Done");
         }
     }
 

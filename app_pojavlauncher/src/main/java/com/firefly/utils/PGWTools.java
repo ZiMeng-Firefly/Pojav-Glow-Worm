@@ -7,15 +7,17 @@ import android.opengl.EGLDisplay;
 import android.opengl.GLES20;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import net.kdt.pojavlaunch.Logger;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class PGWTools {
 
@@ -31,6 +33,10 @@ public class PGWTools {
 
     public static boolean onCancelled() {
         return isCancelled;
+    }
+
+    public static void onAppendToLog(String message) {
+        Logger.appendToLog("==================== " + message + " ====================");
     }
 
     // Check for AdrenoGPU
