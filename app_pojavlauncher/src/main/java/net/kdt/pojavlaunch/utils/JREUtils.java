@@ -19,7 +19,6 @@ import android.content.Context;
 import android.os.Build;
 import android.system.ErrnoException;
 import android.system.Os;
-import android.util.LinkedHashMap;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -53,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -123,7 +123,6 @@ public class JREUtils {
         for (File f : locateLibs(new File(jreHome, Tools.DIRNAME_HOME_JRE))) {
             dlopen(f.getAbsolutePath());
         }
-        dlopen(NATIVE_LIB_DIR + "/libopenal.so");
     }
 
     public static void redirectAndPrintJRELog() {
@@ -467,6 +466,9 @@ public class JREUtils {
 
     private static void initGraphicAndSoundEngine() {
         String rendererLib = loadGraphicsLibrary();
+
+        dlopen(NATIVE_LIB_DIR + "/libopenal.so");
+
         RendererPlugin.Renderer customRenderer = RendererPlugin.getSelectedRenderer();
         if (customRenderer != null) {
             customRenderer.getEnv().forEach(envPair -> {
