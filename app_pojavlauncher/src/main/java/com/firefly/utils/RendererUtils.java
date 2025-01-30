@@ -24,7 +24,7 @@ public class RendererUtils {
         if (RendererPlugin.isAvailable()) {
             RendererPlugin.getRendererList().forEach(renderer -> {
                 if (renderer.getIdName() != null && renderer.getId() != null) {
-                    launcherRendererIds.put(renderer.getIdName, renderer.getId());
+                    launcherRendererIds.put(renderer.getIdName(), renderer.getId());
                 }
             });
         }
