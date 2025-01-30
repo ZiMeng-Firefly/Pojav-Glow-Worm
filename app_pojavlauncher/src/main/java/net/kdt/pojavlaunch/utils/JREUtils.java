@@ -292,30 +292,30 @@ public class JREUtils {
             switch (LOCAL_RENDERER) {
                 case "vulkan_zink": {
                     envMap.put("POJAV_BETA_RENDERER", "mesa_3d");
-                    envMap.put("LOCAL_DRIVER_MODEL", "driver_zink");
+                    envMap.put("LOCAL_DRIVER_MODEL", "gallium_zink");
                     envMap.put("MESA_GL_VERSION_OVERRIDE", "4.6");
                     envMap.put("MESA_GLSL_VERSION_OVERRIDE", "460");
                     envMap.put("mesa_glthread", "true");
                 }
                 break;
-                case "virglrenderer": {
+                case "gallium_virgl": {
                     envMap.put("POJAV_BETA_RENDERER", "mesa_3d");
-                    envMap.put("LOCAL_DRIVER_MODEL", "driver_virgl");
+                    envMap.put("LOCAL_DRIVER_MODEL", "gallium_virgl");
                     envMap.put("MESA_GL_VERSION_OVERRIDE", "4.3");
                     envMap.put("MESA_GLSL_VERSION_OVERRIDE", "430");
                     envMap.put("mesa_glthread", "true");
                     envMap.put("VTEST_SOCKET_NAME", new File(Tools.DIR_CACHE, ".virgl_test").getAbsolutePath());
                 }
                 break;
-                case "freedreno": {
+                case "gallium_freedreno": {
                     envMap.put("POJAV_BETA_RENDERER", "mesa_3d");
-                    envMap.put("LOCAL_DRIVER_MODEL", "driver_freedreno");
+                    envMap.put("LOCAL_DRIVER_MODEL", "gallium_freedreno");
                     envMap.put("LOCAL_LOADER_OVERRIDE", "kgsl");
                 }
                 break;
-                case "panfrost": {
+                case "gallium_panfrost": {
                     envMap.put("POJAV_BETA_RENDERER", "mesa_3d");
-                    envMap.put("LOCAL_DRIVER_MODEL", "driver_panfrost");
+                    envMap.put("LOCAL_DRIVER_MODEL", "gallium_panfrost");
                     envMap.put("MESA_DISK_CACHE_SINGLE_FILE", "1");
                     envMap.put("MESA_DISK_CACHE_SINGLE_FILE", "true");
                 }
@@ -330,20 +330,20 @@ public class JREUtils {
         if (LOCAL_RENDERER.equals("mesa_3d")) {
             if (PREF_EXP_ENABLE_SPECIFIC) {
                 switch (DRIVER_MODEL) {
-                    case "driver_zink":
-                    case "driver_freedreno":
-                    case "driver_softpipe":
-                    case "driver_llvmpipe": {
+                    case "gallium_zink":
+                    case "gallium_freedreno":
+                    case "gallium_softpipe":
+                    case "gallium_llvmpipe": {
                         envMap.put("MESA_GL_VERSION_OVERRIDE", "4.6");
                         envMap.put("MESA_GLSL_VERSION_OVERRIDE", "460");
                     }
                     break;
-                    case "driver_virgl": {
+                    case "gallium_virgl": {
                         envMap.put("MESA_GL_VERSION_OVERRIDE", "4.3");
                         envMap.put("MESA_GLSL_VERSION_OVERRIDE", "430");
                     }
                     break;
-                    case "driver_panfrost": {
+                    case "gallium_panfrost": {
                         envMap.put("MESA_GL_VERSION_OVERRIDE", "3.3");
                         envMap.put("MESA_GLSL_VERSION_OVERRIDE", "330");
                     }
@@ -354,7 +354,7 @@ public class JREUtils {
                 envMap.put("MESA_GLSL_VERSION_OVERRIDE", glslVersion);
             }
 
-            if (PREF_LOADER_OVERRIDE && DRIVER_MODEL.equals("driver_freedreno")) {
+            if (PREF_LOADER_OVERRIDE && DRIVER_MODEL.equals("gallium_freedreno")) {
                 switch (LOADER_OVERRIDE) {
                     case "kgsl":
                         envMap.put("LOCAL_LOADER_OVERRIDE", "kgsl");
@@ -374,12 +374,12 @@ public class JREUtils {
             if (PREF_USE_DRM_SHIM)
                 envMap.put("LD_PRELOAD", NATIVE_LIB_DIR + getDrmShimPath(PGWTools.isAdrenoGPU()));
 
-            if (DRIVER_MODEL.equals("driver_virgl")) {
+            if (DRIVER_MODEL.equals("gallium_virgl")) {
                 envMap.put("DCLAT_FRAMEBUFFER", "1");
                 envMap.put("VTEST_SOCKET_NAME", new File(Tools.DIR_CACHE, ".virgl_test").getAbsolutePath());
             }
 
-            if (DRIVER_MODEL.equals("driver_panfrost")) {
+            if (DRIVER_MODEL.equals("gallium_panfrost")) {
                 envMap.put("MESA_DISK_CACHE_SINGLE_FILE", "1");
                 if (MESA_LIBS.equals("default"))
                     envMap.put("PAN_MESA_DEBUG", "trace");
@@ -443,18 +443,21 @@ public class JREUtils {
         envMap.put("TURNIP_DIR", folder);
     }
 
-    private static void setEnv(String jreHome, final Runtime runtime) throws Throwable {
+    private static void setEnv(String jreHome, final Runtime runtime, boolean renderer) throws Throwable {
         PGWTools.onAppendToLog("Env Map");
         Map<String, String> envMap = new LinkedHashMap<>();
 
         setJavaEnv(envMap, jreHome);
         setCustomEnv(envMap);
-        checkAndUsedJSPH(envMap, runtime);
 
-        if (PGWTools.isAdrenoGPU() && TURNIP_LIBS != null)
-            loadCustomTurnip(envMap);
-        if (LOCAL_RENDERER != null)
-            setRendererEnv(envMap);
+        if (renderer) {
+            checkAndUsedJSPH(envMap, runtime);
+
+            if (PGWTools.isAdrenoGPU() && TURNIP_LIBS != null)
+                loadCustomTurnip(envMap);
+            if (LOCAL_RENDERER != null)
+                setRendererEnv(envMap);
+        }
 
         for (Map.Entry<String, String> env : envMap.entrySet()) {
             Logger.appendToLog("Added custom env: " + env.getKey() + "=" + env.getValue());
@@ -467,11 +470,11 @@ public class JREUtils {
     }
 
 
-    private static void initGraphicAndSoundEngine() {
-        String rendererLib = loadGraphicsLibrary();
-
+    private static void initGraphicAndSoundEngine(boolean renderer) {
         dlopen(NATIVE_LIB_DIR + "/libopenal.so");
 
+        if (!renderer) return;
+        String rendererLib = loadGraphicsLibrary();
         RendererPlugin.Renderer customRenderer = RendererPlugin.getSelectedRenderer();
         if (customRenderer != null) {
             customRenderer.getEnv().forEach(envPair -> {
@@ -549,11 +552,11 @@ public class JREUtils {
             // Initialize Load Dlopen Library Path.
             initLdLibraryPath(runtimeHome);
             // Set running environment.
-            setEnv(runtimeHome, runtime);
+            setEnv(runtimeHome, runtime, gameDirectory != null);
             // Initialize JVM library files.
             initJavaRuntime(runtimeHome);
             // Initialize renderer library files.
-            initGraphicAndSoundEngine();
+            initGraphicAndSoundEngine(gameDirectory != null);
             // Launch JVM.
             launchJavaVM(activity, runtimeHome, gameDirectory, JVMArgs, userArgsString);
         } finally {
@@ -732,13 +735,13 @@ public class JREUtils {
                     renderLibrary = "libvgpu_1368.so";
                     break;
                 case "vulkan_zink":
-                case "freedreno":
+                case "gallium_freedreno":
                     renderLibrary = "libOSMesa_2304.so";
                     break;
-                case "virglrenderer":
+                case "gallium_virgl":
                     renderLibrary = "libOSMesa_2121.so";
                     break;
-                case "panfrost":
+                case "gallium_panfrost":
                     renderLibrary = "libOSMesa_2300d.so";
                     break;
                 default:

@@ -49,6 +49,7 @@ public class PGWTools {
 
         if (!EGL14.eglInitialize(eglDisplay, null, 0, null, 0)) {
             Log.e("CheckVendor", "Failed to initialize EGL");
+            EGL14.eglTerminate(eglDisplay);
             return false;
         }
 
@@ -100,19 +101,20 @@ public class PGWTools {
     }
 
     // Check for binary executables
-    public static boolean isELFFile(InputStream inputStream) {
+    public static boolean isELFFile(InputStream inputStream) throws IOException {
+        inputStream.mark(4);
         try {
             byte[] elfMagic = new byte[4];
             int bytesRead = inputStream.read(elfMagic);
-
+            inputStream.reset();
             return bytesRead == 4 &&
-                   elfMagic[0] == 0x7F &&
-                   elfMagic[1] == 'E' &&
-                   elfMagic[2] == 'L' &&
-                   elfMagic[3] == 'F';
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+               elfMagic[0] == 0x7F &&
+               elfMagic[1] == 'E' &&
+               elfMagic[2] == 'L' &&
+               elfMagic[3] == 'F';
+        } catch (IOException e) {
+            inputStream.reset();
+            throw e;
         }
     }
 
@@ -140,12 +142,12 @@ public class PGWTools {
     // Unzip the file
     public static boolean unzipFile(File zipFile, File targetDir) {
         if (!zipFile.exists() || !zipFile.isFile()) {
-            System.err.println("Invalid ZIP file: " + zipFile.getAbsolutePath());
+            Log.e("PGWTools", "Invalid ZIP file: " + zipFile.getAbsolutePath());
             return false;
         }
 
         if (!targetDir.exists() && !targetDir.mkdirs()) {
-            System.err.println("Failed to create extraction target directory: " + targetDir.getAbsolutePath());
+            Log.e("PGWTools", "Failed to create extraction target directory: " + targetDir.getAbsolutePath());
             return false;
         }
 
@@ -153,6 +155,13 @@ public class PGWTools {
             ZipEntry entry;
             while ((entry = zipInputStream.getNextEntry()) != null) {
                 File outFile = new File(targetDir, entry.getName());
+                String canonicalTargetPath = targetDir.getCanonicalPath();
+                String canonicalOutPath = outFile.getCanonicalPath();
+
+                if (!canonicalOutPath.startsWith(canonicalTargetPath + File.separator)) {
+                    throw new IOException("Illegal Zip entry path: " + entry.getName());
+                }
+
                 if (entry.isDirectory()) {
                     if (!outFile.mkdirs() && !outFile.isDirectory()) {
                         throw new IOException("Failed to create directory: " + outFile.getAbsolutePath());
@@ -202,8 +211,11 @@ public class PGWTools {
 
     private static boolean deleteRecursively(File fileOrDir) {
         if (fileOrDir.isDirectory()) {
-            for (File child : fileOrDir.listFiles()) {
-                deleteRecursively(child);
+            File[] children = fileOrDir.listFiles();
+            if (children != null) {
+                for (File child : children) {
+                    deleteRecursively(child);
+                }
             }
         }
         return fileOrDir.delete();

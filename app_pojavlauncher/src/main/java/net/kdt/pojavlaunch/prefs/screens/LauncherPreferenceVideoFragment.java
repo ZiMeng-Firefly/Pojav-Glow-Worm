@@ -435,9 +435,9 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
                 rendererListPref.setValue(expRenderer);
             } else rendererListPref.setValueIndex(0);
         } else if ("vulkan_zink".equals(rendererValue)
-                || "virglrenderer".equals(rendererValue)
-                || "freedreno".equals(rendererValue)
-                || "panfrost".equals(rendererValue)) {
+                || "gallium_virgl".equals(rendererValue)
+                || "gallium_freedreno".equals(rendererValue)
+                || "gallium_panfrost".equals(rendererValue)) {
             expRenderer = rendererValue;
             LauncherPreferences.DEFAULT_PREF.edit().putString("renderer", "mesa_3d").apply();
             rendererListPref.setValue("mesa_3d");
