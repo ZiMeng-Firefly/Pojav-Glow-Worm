@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.firefly.utils.MesaUtils;
 import com.firefly.utils.PGWTools;
+import com.firefly.utils.RendererUtils;
 import com.firefly.utils.TurnipUtils;
 
 import com.movtery.plugins.renderer.RendererPlugin;
@@ -259,12 +260,19 @@ public class JREUtils {
         }
 
         RendererPlugin.Renderer customRenderer = RendererPlugin.getSelectedRenderer();
-        if (customRenderer != null && LOCAL_RENDERER.equals(customRenderer.getId())) {
+        if (customRenderer != null && LOCAL_RENDERER.equals(customRenderer.getIdName())) {
             customRenderer.getEnv().forEach(envPair -> {
                 String envKey = envPair.getFirst();
                 String envValue = envPair.getSecond();
-                if (envKey.equals("DLOPEN") || envKey.equals("POJAV_RENDERER")) return;
-                if (envKey.equals("LIB_MESA_NAME")) {
+                if (envKey.equals("DLOPEN")) return;
+                if (envKey.equals("POJAV_RENDERER")) {
+                    if (!RendererUtils.isGalliumRenderer(envValue)) {
+                        envMap.put("POJAV_BETA_RENDERER", envValue);
+                    } else {
+                        envMap.put("POJAV_BETA_RENDERER", "mesa_3d");
+                        envMap.put("LOCAL_DRIVER_MODEL", envValue);
+                    }
+                } else if (envKey.equals("LIB_MESA_NAME")) {
                     envMap.put(envKey, customRenderer.getPath() + "/" + envValue);
                 } else {
                     envMap.put(envKey, envValue);
@@ -276,6 +284,8 @@ public class JREUtils {
             } else {
                 eglName = customEglName;
             }
+            envMap.put("POJAVEXEC_EGL", eglName);
+            return;
         }
 
         if (eglName != null) envMap.put("POJAVEXEC_EGL", eglName);
@@ -287,8 +297,7 @@ public class JREUtils {
             envMap.put("allow_glsl_extension_directive_midshader", "true");
         } else envMap.put("POJAV_BETA_RENDERER", LOCAL_RENDERER);
 
-        if ((!LOCAL_RENDERER.startsWith("opengles") && !PREF_EXP_SETUP)
-         || (customRenderer != null && LOCAL_RENDERER.equals(customRenderer.getId()))) {
+        if (!LOCAL_RENDERER.startsWith("opengles") && !PREF_EXP_SETUP) {
             switch (LOCAL_RENDERER) {
                 case "vulkan_zink": {
                     envMap.put("POJAV_BETA_RENDERER", "mesa_3d");

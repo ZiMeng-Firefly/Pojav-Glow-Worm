@@ -430,7 +430,7 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
     private void onChangeRenderer(ListPreference rendererListPref) {
         String rendererValue = LauncherPreferences.DEFAULT_PREF.getString("renderer", null);
         if ("mesa_3d".equals(rendererValue)) {
-            if (expRenderer != null) {
+            f (expRenderer != null) {
                 LauncherPreferences.DEFAULT_PREF.edit().putString("renderer", expRenderer).apply();
                 rendererListPref.setValue(expRenderer);
             } else rendererListPref.setValueIndex(0);

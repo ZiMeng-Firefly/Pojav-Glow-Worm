@@ -101,20 +101,19 @@ public class PGWTools {
     }
 
     // Check for binary executables
-    public static boolean isELFFile(InputStream inputStream) throws IOException {
-        inputStream.mark(4);
+    public static boolean isELFFile(InputStream inputStream) {
         try {
             byte[] elfMagic = new byte[4];
             int bytesRead = inputStream.read(elfMagic);
-            inputStream.reset();
+
             return bytesRead == 4 &&
-               elfMagic[0] == 0x7F &&
-               elfMagic[1] == 'E' &&
-               elfMagic[2] == 'L' &&
-               elfMagic[3] == 'F';
-        } catch (IOException e) {
-            inputStream.reset();
-            throw e;
+                   elfMagic[0] == 0x7F &&
+                   elfMagic[1] == 'E' &&
+                   elfMagic[2] == 'L' &&
+                   elfMagic[3] == 'F';
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
