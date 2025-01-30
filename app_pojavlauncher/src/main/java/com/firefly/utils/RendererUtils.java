@@ -24,7 +24,7 @@ public class RendererUtils {
         if (RendererPlugin.isAvailable()) {
             RendererPlugin.getRendererList().forEach(renderer -> {
                 if (renderer.getIdName() != null && renderer.getId() != null) {
-                    launcherRendererIds.put(getIdName, renderer.getId());
+                    launcherRendererIds.put(renderer.getIdName, renderer.getId());
                 }
             });
         }
@@ -36,8 +36,12 @@ public class RendererUtils {
         return ids;
     }
 
+    private static final Set<String> GALLIUM_RENDERERS = Set.of(
+    "virgl", "zink", "freedreno", "panfrost", "softpipe", "llvmpipe"
+    );
+
     public static boolean isGalliumRenderer(String envValue) {
-        return envValue.contains("virgl") || envValue.contains("zink") || envValue.contains("freedreno") || envValue.contains("panfrost") || envValue.contains("softpipe") envValue.contains("llvmpipe");
+        return GALLIUM_RENDERERS.stream().anyMatch(envValue::contains);
     }
 
 }

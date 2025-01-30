@@ -430,14 +430,14 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
     private void onChangeRenderer(ListPreference rendererListPref) {
         String rendererValue = LauncherPreferences.DEFAULT_PREF.getString("renderer", null);
         if ("mesa_3d".equals(rendererValue)) {
-            f (expRenderer != null) {
+            if (expRenderer != null) {
                 LauncherPreferences.DEFAULT_PREF.edit().putString("renderer", expRenderer).apply();
                 rendererListPref.setValue(expRenderer);
             } else rendererListPref.setValueIndex(0);
         } else if ("vulkan_zink".equals(rendererValue)
-                || "gallium_virgl".equals(rendererValue)
-                || "gallium_freedreno".equals(rendererValue)
-                || "gallium_panfrost".equals(rendererValue)) {
+                || "virglrenderer".equals(rendererValue)
+                || "freedreno".equals(rendererValue)
+                || "panfrost".equals(rendererValue)) {
             expRenderer = rendererValue;
             LauncherPreferences.DEFAULT_PREF.edit().putString("renderer", "mesa_3d").apply();
             rendererListPref.setValue("mesa_3d");
