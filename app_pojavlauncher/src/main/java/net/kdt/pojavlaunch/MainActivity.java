@@ -403,6 +403,9 @@ public class MainActivity extends BaseActivity implements ControlButtonMenuListe
         if (Tools.CONFIG_BRIDGE == null)
             Tools.CONFIG_BRIDGE = LauncherPreferences.PREF_CONFIG_BRIDGE;
 
+        if (Tools.LIBGL_GL == null)
+            Tools.LIBGL_GL = LauncherPreferences.PREF_LIBGL_GL;
+
         if (!Tools.checkRendererCompatible(this, Tools.LOCAL_RENDERER)) {
             ListUtils.RenderersList renderersList = ListUtils.getCompatibleRenderers(this);
             String firstCompatibleRenderer = renderersList.rendererIds.get(0);
