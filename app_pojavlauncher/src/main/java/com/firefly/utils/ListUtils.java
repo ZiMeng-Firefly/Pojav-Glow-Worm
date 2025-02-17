@@ -1,5 +1,7 @@
 package com.firefly.utils;
 
+import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_EXP_SETUP;
+
 import android.content.Context;
 import android.content.res.Resources;
 
@@ -8,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.kdt.pojavlaunch.Tools;
-import net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_EXP_SETUP;
+import net.kdt.pojavlaunch.R;
 
 import com.firefly.utils.MesaUtils;
 import com.firefly.utils.TurnipUtils;
@@ -24,13 +26,13 @@ public class ListUtils {
     private static ConfigBridgeList sCompatibleConfigBridge;
     private static LibGLGLList sCompatibleLibGLGL;
 
-    public static interface IListAndArry {
+    public static interface ListAndArray {
         List<String> getList();
 
         String[] getArray();
     }
 
-    public static class RenderersList implements IListAndArry {
+    public static class RenderersList implements ListAndArray {
         public final List<String> rendererIds;
         public final String[] rendererDisplayNames;
 
@@ -82,7 +84,7 @@ public class ListUtils {
         return sCompatibleRenderers;
     }
 
-    public static class ConfigBridgeList implements IListAndArry {
+    public static class ConfigBridgeList implements ListAndArray {
         public final List<String> configIds;
         public final String[] configNames;
 
@@ -116,7 +118,7 @@ public class ListUtils {
         return sCompatibleConfigBridge;
     }
 
-    public static class CMesaLibList implements IListAndArry {
+    public static class CMesaLibList implements ListAndArray {
         public final List<String> CMesaLibIds;
         public final String[] CMesaLibs;
 
@@ -155,7 +157,7 @@ public class ListUtils {
         return sCompatibleCMesaLibs;
     }
 
-    public static class CDriverModelList implements IListAndArry {
+    public static class CDriverModelList implements ListAndArray {
         public final List<String> CDriverModelIds;
         public final String[] CDriverModels;
 
@@ -223,7 +225,7 @@ public class ListUtils {
         return sCompatibleCDriverModel;
     }
 
-    public static class CMesaLDOList implements IListAndArry {
+    public static class CMesaLDOList implements ListAndArray {
         public final List<String> CMesaLDOIds;
         public final String[] CMesaLDO;
 
@@ -259,7 +261,7 @@ public class ListUtils {
         return sCompatibleCMesaLDO;
     }
 
-    public static class CTurnipDriverList implements IListAndArry {
+    public static class CTurnipDriverList implements ListAndArray {
         public final List<String> CTurnipDriverIds;
         public final String[] CTurnipDriver;
 
@@ -298,7 +300,7 @@ public class ListUtils {
         return sCompatibleCTurnipDriver;
     }
 
-    public static class LibGLGLList implements IListAndArry {
+    public static class LibGLGLList implements ListAndArray {
         public final List<String> LIBGLGLIds;
         public final String[] LIBGLGL;
 

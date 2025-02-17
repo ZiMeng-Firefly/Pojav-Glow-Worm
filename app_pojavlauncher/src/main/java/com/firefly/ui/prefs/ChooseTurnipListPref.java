@@ -153,7 +153,7 @@ public class ChooseTurnipListPref extends ListPreference {
     }
 
     private void setEntriesAndValues() {
-        ListUtils.IListAndArry array = ListUtils.getCompatibleCTurnipDriver(getContext());
+        ListUtils.ListAndArray array = ListUtils.getCompatibleCTurnipDriver(getContext());
         setEntries(array.getArray());
         setEntryValues(array.getList().toArray(new String[0]));
         String currentValue = getValue();

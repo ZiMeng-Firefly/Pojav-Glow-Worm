@@ -155,7 +155,7 @@ public class ChooseMesaListPref extends ListPreference {
     }
 
     private void setEntriesAndValues() {
-        ListUtils.IListAndArry array = ListUtils.getCompatibleCMesaLib(getContext());
+        ListUtils.ListAndArray array = ListUtils.getCompatibleCMesaLib(getContext());
         setEntries(array.getArray());
         setEntryValues(array.getList().toArray(new String[0]));
         String currentValue = getValue();

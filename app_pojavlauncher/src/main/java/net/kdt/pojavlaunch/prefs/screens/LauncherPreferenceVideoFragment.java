@@ -283,7 +283,7 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
     }
 
     private void setListPreference(ListPreference listPreference, String preferenceKey) {
-        ListUtils.IListAndArry array = null;
+        ListUtils.ListAndArray array = null;
         String value = listPreference.getValue();
         if (preferenceKey.equals("CMesaLibrary")) {
             array = ListUtils.getCompatibleCMesaLib(getContext());
