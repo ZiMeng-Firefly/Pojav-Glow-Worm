@@ -143,7 +143,7 @@ public final class Tools {
     public static String MESA_LIBS = null;
     public static String TURNIP_LIBS = null;
     public static String LOADER_OVERRIDE = null;
-    public static String LIBGL_GL = "21";
+    public static String LIBGL_GL = null;
 
     private static File getPojavStorageRoot(Context ctx) {
         if (SDK_INT >= 29) {
