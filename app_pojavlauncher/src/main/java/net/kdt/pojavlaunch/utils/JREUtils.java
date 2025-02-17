@@ -2,6 +2,7 @@ package net.kdt.pojavlaunch.utils;
 
 import static net.kdt.pojavlaunch.Architecture.ARCH_X86;
 import static net.kdt.pojavlaunch.Architecture.is64BitsDevice;
+import static net.kdt.pojavlaunch.Tools.PGW_VERSION_CODE;
 import static net.kdt.pojavlaunch.Tools.CONFIG_BRIDGE;
 import static net.kdt.pojavlaunch.Tools.DRIVER_MODEL;
 import static net.kdt.pojavlaunch.Tools.LOADER_OVERRIDE;
@@ -27,6 +28,7 @@ import com.firefly.utils.PGWTools;
 import com.firefly.utils.RendererUtils;
 import com.firefly.utils.TurnipUtils;
 
+import com.movtery.feature.version.VersionInfo;
 import com.movtery.plugins.renderer.RendererPlugin;
 import com.movtery.ui.subassembly.customprofilepath.ProfilePathHome;
 import com.movtery.ui.subassembly.customprofilepath.ProfilePathManager;
@@ -226,6 +228,10 @@ public class JREUtils {
         envMap.put("AWTSTUB_WIDTH", Integer.toString(CallbackBridge.windowWidth > 0 ? CallbackBridge.windowWidth : CallbackBridge.physicalWidth));
         envMap.put("AWTSTUB_HEIGHT", Integer.toString(CallbackBridge.windowHeight > 0 ? CallbackBridge.windowHeight : CallbackBridge.physicalHeight));
 
+        if (PGW_VERSION_CODE != null)
+            envMap.put("PGW_VERSION_CODE", PGW_VERSION_CODE);
+        if (TURNIP_LIBS == null)
+            envMap.put("DRIVER_PATH", NATIVE_LIB_DIR);
         if (Tools.CONFIG_BRIDGE != null)
             envMap.put("POJAV_CONFIG_BRIDGE", CONFIG_BRIDGE);
         if (PREF_BIG_CORE_AFFINITY)
@@ -273,6 +279,8 @@ public class JREUtils {
                         envMap.put("LOCAL_DRIVER_MODEL", envValue);
                     }
                 } else if (envKey.equals("LIB_MESA_NAME")) {
+                    envMap.put(envKey, customRenderer.getPath() + "/" + envValue);
+                } else if (envKey.equals("MESA_LIBRARY")) {
                     envMap.put(envKey, customRenderer.getPath() + "/" + envValue);
                 } else {
                     envMap.put(envKey, envValue);
@@ -333,7 +341,7 @@ public class JREUtils {
                     // Nothing to do here
                     break;
             }
-            envMap.put("MESA_LIBRARY", loadGraphicsLibrary());
+            envMap.put("LIB_MESA_NAME", loadGraphicsLibrary());
         }
 
         if (LOCAL_RENDERER.equals("mesa_3d")) {
@@ -394,7 +402,7 @@ public class JREUtils {
                     envMap.put("PAN_MESA_DEBUG", "trace");
             }
 
-            envMap.put("MESA_LIBRARY", loadGraphicsLibrary());
+            envMap.put("LIB_MESA_NAME", loadGraphicsLibrary());
             envMap.put("LOCAL_DRIVER_MODEL", DRIVER_MODEL);
             envMap.put("POJAV_BETA_RENDERER", "mesa_3d");
         }
@@ -446,13 +454,17 @@ public class JREUtils {
     }
 
     private static void loadCustomTurnip(Map<String, String> envMap) {
-        if (TURNIP_LIBS.equals("default") || PREF_ZINK_PREFER_SYSTEM_DRIVER) return;
+        if (PREF_ZINK_PREFER_SYSTEM_DRIVER) return;
+        if (TURNIP_LIBS.equals("default")) {
+            envMap.put("DRIVER_PATH", NATIVE_LIB_DIR);
+            return;
+        }
         String folder = TurnipUtils.INSTANCE.getTurnipDriver(TURNIP_LIBS);
         if (folder == null) return;
-        envMap.put("TURNIP_DIR", folder);
+        envMap.put("DRIVER_PATH", folder);
     }
 
-    private static void setEnv(String jreHome, final Runtime runtime, boolean renderer) throws Throwable {
+    private static void setEnv(String jreHome, final Runtime runtime, VersionInfo versionInfo, boolean renderer) throws Throwable {
         PGWTools.onAppendToLog("Env Map");
         Map<String, String> envMap = new LinkedHashMap<>();
 
@@ -461,6 +473,14 @@ public class JREUtils {
 
         if (renderer) {
             checkAndUsedJSPH(envMap, runtime);
+
+            if (versionInfo != null && versionInfo.getLoaderInfo() != null) {
+                for (VersionInfo.LoaderInfo loaderInfo : versionInfo.getLoaderInfo()) {
+                    if (loaderInfo.getLoaderEnvKey() != null) {
+                        envMap.put(loaderInfo.getLoaderEnvKey(), "1");
+                    }
+                }
+            }
 
             if (PGWTools.isAdrenoGPU() && TURNIP_LIBS != null)
                 loadCustomTurnip(envMap);
@@ -552,7 +572,7 @@ public class JREUtils {
         return exitCode;
     }
 
-    public static void launchWithUtils(final Activity activity, final Runtime runtime, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
+    public static void launchWithUtils(final Activity activity, final Runtime runtime, VersionInfo versionInfo, File gameDirectory, final List<String> JVMArgs, final String userArgsString) throws Throwable {
         String runtimeHome = MultiRTUtils.getRuntimeHome(runtime.name).getAbsolutePath();
 
         try {
@@ -561,7 +581,7 @@ public class JREUtils {
             // Initialize Load Dlopen Library Path.
             initLdLibraryPath(runtimeHome);
             // Set running environment.
-            setEnv(runtimeHome, runtime, gameDirectory != null);
+            setEnv(runtimeHome, runtime, versionInfo, gameDirectory != null);
             // Initialize JVM library files.
             initJavaRuntime(runtimeHome);
             // Initialize renderer library files.

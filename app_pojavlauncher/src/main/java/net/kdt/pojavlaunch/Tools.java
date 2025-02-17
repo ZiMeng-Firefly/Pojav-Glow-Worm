@@ -50,6 +50,8 @@ import com.fifthLight.touchController.ControllerProxy;
 import com.firefly.utils.MesaUtils;
 import com.firefly.utils.TurnipUtils;
 
+import com.movtery.feature.version.VersionInfo;
+import com.movtery.feature.version.utils.VersionInfoUtils;
 import com.movtery.plugins.renderer.RendererPlugin;
 
 import com.google.gson.Gson;
@@ -108,6 +110,7 @@ public final class Tools {
     public static final float BYTE_TO_MB = 1024 * 1024;
     public static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
     public static String APP_NAME = "Pojav Glow·Worm";
+    public static String PGW_VERSION_CODE = null;
 
     public static final Gson GLOBAL_GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -230,6 +233,12 @@ public final class Tools {
 
         File gamedir = Tools.getGameDirPath(minecraftProfile);
 
+        VersionInfo versionInfo1;
+        try {
+            versionInfo1 = VersionInfoUtils.parseJson(new File(getVersionJsonPath(versionId)));
+        } catch (RuntimeException e) {
+            versionInfo1 = null;
+        }
 
         // Pre-process specific files
         disableSplash(gamedir);
@@ -266,10 +275,11 @@ public final class Tools {
         javaArgList.addAll(Arrays.asList(launchArgs));
         // ctx.appendlnToLog("full args: "+javaArgList.toString());
         String args = LauncherPreferences.PREF_CUSTOM_JAVA_ARGS;
+        PGW_VERSION_CODE = activity.getString(R.string.base_version_code);
         if (Tools.isValidString(minecraftProfile.javaArgs)) args = minecraftProfile.javaArgs;
         FFmpegPlugin.discover(activity);
         ControllerProxy.startProxy();
-        JREUtils.launchWithUtils(activity, runtime, gamedir, javaArgList, args);
+        JREUtils.launchWithUtils(activity, runtime, versionInfo1, gamedir, javaArgList, args);
         // If we returned, this means that the JVM exit dialog has been shown and we don't need to be active anymore.
         // We never return otherwise. The process will be killed anyway, and thus we will become inactive
     }
@@ -803,6 +813,10 @@ public final class Tools {
         return libDir.toArray(new String[0]);
     }
 
+    public static String getVersionJsonPath(String versionName) {
+        return ProfilePathHome.getVersionsHome() + "/" + versionName + "/" + versionName + ".json";
+    }
+
     public static JMinecraftVersionList.Version getVersionInfo(String versionName) {
         return getVersionInfo(versionName, false);
     }
@@ -810,7 +824,7 @@ public final class Tools {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static JMinecraftVersionList.Version getVersionInfo(String versionName, boolean skipInheriting) {
         try {
-            JMinecraftVersionList.Version customVer = Tools.GLOBAL_GSON.fromJson(read(ProfilePathHome.getVersionsHome() + "/" + versionName + "/" + versionName + ".json"), JMinecraftVersionList.Version.class);
+            JMinecraftVersionList.Version customVer = Tools.GLOBAL_GSON.fromJson(read(getVersionJsonPath(versionName)), JMinecraftVersionList.Version.class);
             if (skipInheriting || customVer.inheritsFrom == null || customVer.inheritsFrom.equals(customVer.id)) {
                 preProcessLibraries(customVer.libraries);
             } else {
