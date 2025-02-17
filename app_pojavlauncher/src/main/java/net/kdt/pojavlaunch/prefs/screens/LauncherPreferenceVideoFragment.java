@@ -24,7 +24,6 @@ import androidx.preference.Preference.OnPreferenceChangeListener;
 
 import com.firefly.feature.TurnipDownloader;
 import com.firefly.feature.MesaDownloader;
-import com.firefly.utils.IListAndArry;
 import com.firefly.utils.ListUtils;
 import com.firefly.utils.MesaUtils;
 import com.firefly.utils.PGWTools;
@@ -284,7 +283,7 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
     }
 
     private void setListPreference(ListPreference listPreference, String preferenceKey) {
-        IListAndArry array = null;
+        ListUtils.IListAndArry array = null;
         String value = listPreference.getValue();
         if (preferenceKey.equals("CMesaLibrary")) {
             array = ListUtils.getCompatibleCMesaLib(getContext());

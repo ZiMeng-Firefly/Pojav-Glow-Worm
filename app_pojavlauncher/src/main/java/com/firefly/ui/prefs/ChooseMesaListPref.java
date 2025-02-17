@@ -14,7 +14,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.preference.ListPreference;
 
 import com.firefly.ui.dialog.CustomDialog;
-import com.firefly.utils.IListAndArry;
 import com.firefly.utils.ListUtils;
 import com.firefly.utils.MesaUtils;
 
@@ -156,7 +155,7 @@ public class ChooseMesaListPref extends ListPreference {
     }
 
     private void setEntriesAndValues() {
-        IListAndArry array = ListUtils.getCompatibleCMesaLib(getContext());
+        ListUtils.IListAndArry array = ListUtils.getCompatibleCMesaLib(getContext());
         setEntries(array.getArray());
         setEntryValues(array.getList().toArray(new String[0]));
         String currentValue = getValue();

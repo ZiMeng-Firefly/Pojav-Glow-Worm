@@ -10,7 +10,6 @@ import java.util.List;
 import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_EXP_SETUP;
 
-import com.firefly.utils.IListAndArry;
 import com.firefly.utils.MesaUtils;
 import com.firefly.utils.TurnipUtils;
 
@@ -24,6 +23,12 @@ public class ListUtils {
     private static RenderersList sCompatibleRenderers;
     private static ConfigBridgeList sCompatibleConfigBridge;
     private static LibGLGLList sCompatibleLibGLGL;
+
+    public static interface IListAndArry {
+        List<String> getList();
+
+        String[] getArray();
+    }
 
     public static class RenderersList implements IListAndArry {
         public final List<String> rendererIds;
