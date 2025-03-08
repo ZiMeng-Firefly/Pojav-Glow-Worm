@@ -124,13 +124,13 @@ public final class Tools {
     public static File FILE_PROFILE_PATH;
     public static String MULTIRT_HOME;
     public static String LOCAL_RENDERER = null;
-    public static String CONFIG_BRIDGE;
+    public static String BRIDGE_CONFIG;
     public static int DEVICE_ARCHITECTURE;
     public static final String LAUNCHERPROFILES_RTPREFIX = "pojav://";
 
     // New since 3.3.1
     public static String DIR_ACCOUNT_NEW;
-    public static String DIR_GAME_HOME = Environment.getExternalStorageDirectory().getAbsolutePath() + "/games/PojavLauncher";
+    public static String DIR_GAME_HOME = Environment.getExternalStorageDirectory().getAbsolutePath() + "/games/Pojav-Glow-Worm";
 
     // New since 3.0.0
     public static String DIRNAME_HOME_JRE = "lib";
@@ -256,7 +256,7 @@ public final class Tools {
             }
         }
 
-        getCacioJavaArgs(javaArgList, runtime.javaVersion == 8, runtime.javaVersion == 11);
+        getCacioJavaArgs(javaArgList, runtime);
 
         boolean is7 = VersionNumber.compare(VersionNumber.asVersion(versionInfo.id != null ? versionInfo.id : "0.0").getCanonical(), "1.12") < 0;
         String configFilePath = Tools.DIR_DATA + "/security/log4j-rce-patch-" + (is7 ? "1.7" : "1.12") + ".xml";
@@ -329,14 +329,17 @@ public final class Tools {
         }
     }
 
-    public static void getCacioJavaArgs(List<String> javaArgList, boolean isJava8, boolean isJava11) {
+    public static void getCacioJavaArgs(List<String> javaArgList, Runtime runtime) {
+        boolean isCacio10 = runtime.javaVersion == 8;
+        boolean isCacio11 = runtime.javaVersion == 11;
+        boolean isCacio18 = (runtime.javaVersion >= 17 && runtime.javaVersion <= 21);
         // Caciocavallo config AWT-enabled version
         javaArgList.add("-Djava.awt.headless=false");
         javaArgList.add("-Dcacio.managed.screensize=" + AWTCanvasView.AWT_CANVAS_WIDTH + "x" + AWTCanvasView.AWT_CANVAS_HEIGHT);
         javaArgList.add("-Dcacio.font.fontmanager=sun.awt.X11FontManager");
         javaArgList.add("-Dcacio.font.fontscaler=sun.font.FreetypeFontScaler");
         javaArgList.add("-Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel");
-        if (isJava8) {
+        if (isCacio10) {
             javaArgList.add("-Dawt.toolkit=net.java.openjdk.cacio.ctc.CTCToolkit");
             javaArgList.add("-Djava.awt.graphicsenv=net.java.openjdk.cacio.ctc.CTCGraphicsEnvironment");
         } else {
@@ -365,8 +368,8 @@ public final class Tools {
         }
 
         StringBuilder cacioClasspath = new StringBuilder();
-        cacioClasspath.append("-Xbootclasspath/").append(isJava8 ? "p" : "a");
-        File cacioDir = new File(DIR_GAME_HOME + "/caciocavallo" + (isJava8 ? "" : isJava11 ? "11" : "17"));
+        cacioClasspath.append("-Xbootclasspath/").append(isCacio10 ? "p" : "a");
+        File cacioDir = new File(DIR_GAME_HOME + "/caciocavallo" + (isCacio10 ? "" : isCacio11 ? "11" : isCacio18 ? "18" : "19"));
         File[] cacioFiles = cacioDir.listFiles();
         if (cacioFiles != null) {
             for (File file : cacioFiles) {
@@ -944,7 +947,10 @@ public final class Tools {
     }
 
     public static void write(String path, String content) throws IOException {
-        File file = new File(path);
+        write(new File(path), content);
+    }
+
+    public static void write(File file, String content) throws IOException {
         FileUtils.ensureParentDirectory(file);
         try (FileOutputStream outStream = new FileOutputStream(file)) {
             IOUtils.write(content, outStream);

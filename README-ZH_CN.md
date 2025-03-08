@@ -17,8 +17,6 @@
 
 - 该存储库fork自[PojavLauncherTeam:PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)
 
-- 这个启动器将与Pojav团队的主分支更新保持一致 →[v3_openjdk](https://github.com/PojavLauncherTeam/PojavLauncher/tree/v3_openjdk)
-
 - 这个启动器增加了更多渲染器和实验性设置
 
 - 这个启动器并非原版,它是魔改版,如果你不想使用它,请到[PojavLauncherTeam:PojavLauncher](https://github.com/PojavLauncherTeam/PojavLauncher)
@@ -140,6 +138,8 @@ cd ../
 - [LWJGLX](https://github.com/PojavLauncherTeam/lwjglx) (LWJGL2 API compatibility layer for LWJGL3): 未知许可证<br>
 - [Mesa 3D图形库](https://gitlab.freedesktop.org/mesa/mesa): [MIT License](https://docs.mesa3d.org/license.html).
 - [Android-Mesa-Build](https://github.com/Vera-Firefly/android-mesa-build): [GNU GPLv3 License](https://github.com/Vera-Firefly/android-mesa-build/blob/master/LICENSE)
+- [TurnipDriver-CI](https://github.com/Vera-Firefly/TurnipDriver-CI): 未知许可证
+- [AdrenoToolsDrivers](https://github.com/K11MCH1/AdrenoToolsDrivers): 未知许可证
 - [pro-grade](https://github.com/pro-grade/pro-grade) (Java沙盒安全管理器): [Apache License 2.0](https://github.com/pro-grade/pro-grade/blob/master/LICENSE.txt).
 - [bhook](https://github.com/bytedance/bhook) (用于退出代码处理): [MIT license](https://github.com/bytedance/bhook/blob/main/LICENSE).
 - [libepoxy](https://github.com/anholt/libepoxy): [MIT License](https://github.com/anholt/libepoxy/blob/master/COPYING).
