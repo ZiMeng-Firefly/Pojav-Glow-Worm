@@ -78,6 +78,7 @@ public class LauncherPreferences {
     public static boolean PREF_EXP_SETUP = false;
 
     public static boolean PREF_INITIAL_FRAMEBUFFER = false;
+    public static boolean PREF_GL_INITIAL_FRAMEBUFFER = false;
     public static boolean PREF_EXP_ENABLE_SYSTEM = true;
     public static boolean PREF_EXP_ENABLE_SPECIFIC = false;
     public static boolean PREF_EXP_ENABLE_CUSTOM = false;
