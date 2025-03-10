@@ -50,6 +50,8 @@
 // This means that you are forced to have this function/variable for ABI compatibility
 #define ABI_COMPAT __attribute__((unused))
 
+static int currentFps = 0;
+
 void bigcore_set_affinity();
 
 void* loadTurnipVulkan();
@@ -351,6 +353,7 @@ EXTERNAL_API void pojavSetWindowHint(int hint, int value) {
 }
 
 EXTERNAL_API void pojavSwapBuffers() {
+    currentFps++;
     if (pojav_environ->config_renderer == RENDERER_VK_ZINK
      || pojav_environ->config_renderer == RENDERER_GL4ES)
     {
@@ -428,6 +431,13 @@ EXTERNAL_API JNIEXPORT jlong JNICALL
 Java_org_lwjgl_vulkan_VK_getVulkanDriverHandle(ABI_COMPAT JNIEnv *env, ABI_COMPAT jclass thiz) {
     printf("EGLBridge: LWJGL-side Vulkan loader requested the Vulkan handle\n");
     return (jlong) maybe_load_vulkan();
+}
+
+EXTERNAL_API JNIEXPORT jint JNICALL
+Java_org_lwjgl_glfw_CallbackBridge_initFps(JNIEnv *env, jclass clazz) {
+    int fps = currentFps;
+    currentFps = 0;
+    return fps;
 }
 
 EXTERNAL_API JNIEXPORT void JNICALL
