@@ -448,13 +448,12 @@ Java_org_lwjgl_opengl_GL_nativeRegalMakeCurrent(JNIEnv *env, jclass clazz) {
 
 EXTERNAL_API JNIEXPORT jlong JNICALL
 Java_org_lwjgl_opengl_GL_getGraphicsBufferAddr(JNIEnv *env, jobject thiz) {
-    if (InitialFrameBuffer() && pojav_environ->config_renderer == RENDERER_VIRGL)
+    if (InitialFrameBuffer() &&
+       (pojav_environ->config_renderer == RENDERER_VIRGL
+     || pojav_environ->config_renderer == RENDERER_VK_ZINK_XXX1
+     || pojav_environ->config_renderer == RENDERER_VK_ZINK_XXX2))
     {
         return &gbuffer;
-    } else if (InitialFrameBuffer() && pojav_environ->config_renderer == RENDERER_VK_ZINK_XXX1) {
-        return &mbuffer;
-    } else if (InitialFrameBuffer() && pojav_environ->config_renderer == RENDERER_VK_ZINK_XXX2) {
-        return &abuffer;
     }
 }
 
