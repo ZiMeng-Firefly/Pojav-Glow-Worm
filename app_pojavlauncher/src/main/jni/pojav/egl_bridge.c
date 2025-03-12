@@ -35,9 +35,12 @@
 #include "ctxbridges/osm_bridge_xxx1.h"
 #include "ctxbridges/osm_bridge_xxx2.h"
 #include "ctxbridges/osm_bridge_xxx3.h"
-#include "ctxbridges/renderer_config.h"
 #include "ctxbridges/virgl_bridge.h"
 #include "driver_helper/nsbypass.h"
+
+#define POTATOBRIDGE
+#define INITIAL_FRAME_BUFFER
+#include "ctxbridges/renderer_config.h"
 
 #define GLFW_CLIENT_API 0x22001
 /* Consider GLFW_NO_API as Vulkan API */
