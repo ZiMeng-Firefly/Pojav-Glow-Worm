@@ -119,7 +119,7 @@ void ConfigBridgeTbl() {
 }
 
 JNIEXPORT void JNICALL
-Java_net_kdt_pojavlaunch_utils_JREUtils_setRendererTag(JNIEnv *env, jclass clazz, jstring tag) {
+Java_net_kdt_pojavlaunch_utils_JREUtils_initRendererTag(JNIEnv *env, jclass clazz, jstring tag) {
     const char *RTag = (*env)->GetStringUTFChars(env, tag, 0);
     pojav_environ->rendererTag = strdup(RTag);
     printf("Renderer Tag: %s\n", RTag);

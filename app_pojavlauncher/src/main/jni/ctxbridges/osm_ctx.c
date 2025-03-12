@@ -2,9 +2,12 @@
 // Created by Vera-Firefly on 12.03.2025.
 //
 
+#include <android/native_window.h>
+#include <malloc.h>
 #include "osmesa_loader.h"
 
 #define OSM_CTX
+#define INITIAL_FRAME_BUFFER
 #include "renderer_config.h"
 
 void osm_make_current_l(OSMesaContext context, void *buffer, int width, int height) {
