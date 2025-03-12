@@ -256,6 +256,8 @@ public final class Tools {
             }
         }
 
+        javaArgList.add("-javaagent:" + DIR_GAME_HOME + "/patcher/MioLibPatcher.jar");
+
         getCacioJavaArgs(javaArgList, runtime);
 
         boolean is7 = VersionNumber.compare(VersionNumber.asVersion(versionInfo.id != null ? versionInfo.id : "0.0").getCanonical(), "1.12") < 0;
