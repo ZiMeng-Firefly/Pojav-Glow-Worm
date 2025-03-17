@@ -53,6 +53,9 @@
     <string name="preference_fix_q3_behavior_title">修復 Q3 行為</string>
     <string name="preference_fix_q3_behavior_desc">修復 740v3 上的 Q3 行為</string>
     <string name="worning_system_vulkan_adreno">我們檢測到您的設備為 Adreno GPU，開啟該選項可能會導致 Zink 渲染器無法正常使用。\n您真的確定要開啟這個選項嗎？</string>
+    <string name="neoforge_dl_searching">正在搜尋 NeoForge 版本號</string>  
+    <string name="neoforge_dl_no_installer">抱歉, 此版本的 NeoForge 沒有安裝程式, 目前尚不支援</string>  
+    <string name="neoforge_dl_select_version">選擇 NeoForge 版本</string>
     <!-- Terminal -->
     <string name="main_terminal">Terminal</string>
     <string name="main_termianl_init">初始化</string>
@@ -85,7 +88,7 @@
     <string name="preference_osm_initial_framebuffer_title">OSM初始幀緩衝區</string>
     <string name="preference_gl_initial_framebuffer_title">GL初始幀緩衝區</string>
     <string name="preference_renderer_setup_extra">渲染器 (額外)</string>
-    <string name="preference_renderer_extra_default">Mesa25.0.0 (預設)</string>
+    <string name="preference_renderer_extra_default">Mesa25.0.1 (預設)</string>
     <string name="preference_extra_mesa_version">Mesa 版本</string>
     <string name="preference_extra_driver_model">Gallium驅動程序</string>
     <!-- Dialog -->
