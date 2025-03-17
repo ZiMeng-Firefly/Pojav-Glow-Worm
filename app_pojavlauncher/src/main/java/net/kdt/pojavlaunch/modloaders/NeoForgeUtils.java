@@ -65,6 +65,6 @@ public class NeoForgeUtils {
     }
 
     public static void addAutoInstallArgs(Intent intent, File modInstallerJar) {
-        intent.putExtra("javaArgs", "-jar "+modInstallerJar.getAbsolutePath());
+        intent.putExtra("javaArgs", "-jar " + modInstallerJar.getAbsolutePath() + " --installClient");
     }
 }
