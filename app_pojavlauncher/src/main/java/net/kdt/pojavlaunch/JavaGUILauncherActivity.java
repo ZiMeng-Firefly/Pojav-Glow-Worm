@@ -23,7 +23,7 @@ import androidx.core.content.FileProvider;
 
 import com.kdt.LoggerView;
 
-import com.movtery.zalithlauncher.event.value.JvmExitEvent;
+import com.movtery.event.value.JvmExitEvent;
 import net.kdt.pojavlaunch.customcontrols.keyboard.AwtCharSender;
 import net.kdt.pojavlaunch.customcontrols.keyboard.TouchCharInput;
 import net.kdt.pojavlaunch.multirt.MultiRTUtils;

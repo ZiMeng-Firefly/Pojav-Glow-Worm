@@ -580,7 +580,7 @@ public class JREUtils {
                 dialog.show();
             });
         }
-        EventBus.getDefault().post(new JvmExitEvent(exitcode));
+        EventBus.getDefault().post(new JvmExitEvent(exitCode));
         return exitCode;
     }
 
