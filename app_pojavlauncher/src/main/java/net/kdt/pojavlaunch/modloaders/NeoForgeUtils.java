@@ -2,6 +2,7 @@ package net.kdt.pojavlaunch.modloaders;
 
 import android.content.Intent;
 import net.kdt.pojavlaunch.utils.DownloadUtils;
+import net.kdt.pojavlaunch.JavaGUILauncherActivity;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -66,5 +67,6 @@ public class NeoForgeUtils {
 
     public static void addAutoInstallArgs(Intent intent, File modInstallerJar) {
         intent.putExtra("javaArgs", "-jar " + modInstallerJar.getAbsolutePath() + " --installClient");
+        intent.putExtra(JavaGUILauncherActivity.SUBSCRIBE_JVM_EXIT_EVENT, true);
     }
 }

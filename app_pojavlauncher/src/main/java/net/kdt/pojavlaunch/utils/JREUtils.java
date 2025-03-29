@@ -33,6 +33,7 @@ import com.movtery.feature.version.VersionInfo;
 import com.movtery.plugins.renderer.RendererPlugin;
 import com.movtery.ui.subassembly.customprofilepath.ProfilePathHome;
 import com.movtery.ui.subassembly.customprofilepath.ProfilePathManager;
+import com.movtery.event.value.JvmExitEvent;
 import com.oracle.dalvik.VMLauncher;
 
 import net.kdt.pojavlaunch.Architecture;
@@ -47,6 +48,7 @@ import net.kdt.pojavlaunch.multirt.Runtime;
 import net.kdt.pojavlaunch.plugins.FFmpegPlugin;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 
+import org.greenrobot.eventbus.EventBus;
 import org.lwjgl.glfw.CallbackBridge;
 
 import java.io.BufferedReader;
@@ -578,6 +580,7 @@ public class JREUtils {
                 dialog.show();
             });
         }
+        EventBus.getDefault().post(new JvmExitEvent(exitcode));
         return exitCode;
     }
 
