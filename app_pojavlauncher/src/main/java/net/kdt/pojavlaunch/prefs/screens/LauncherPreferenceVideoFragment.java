@@ -40,7 +40,10 @@ import android.os.Build;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import net.kdt.pojavlaunch.PojavApplication;
@@ -295,7 +298,28 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
     }
 
     private void mgRendererSettings() {
-    
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_mgrenderer_settings, null);
+        EditText maxGlslCacheSize = view.findViewById(R.id.mg_input_max_glsl_cache_size);
+        Spinner enableANGLE = view.findViewById(R.id.mg_spinner_angle);
+        Spinner enableNoError = view.findViewById(R.id.mg_spinner_no_error);
+        Switch enableExtGL43 = view.findViewById(R.id.mg_switch_ext_gl43);
+        Switch enableExtComputeShader = view.findViewById(R.id.mg_switch_ext_cs);
+        
+        maxGlslCacheSize.setText("30");
+        enableExtGL43.setChecked(false);
+        enableExtComputeShader.setChecked(false);
+        new CustomDialog.Builder(getContext())
+                .setCustomView(view)
+                .setCancelable(false)
+                .setConfirmListener(R.string.alertdialog_done, customView -> {
+                    String size = maxGlslCacheSize.getText().toString();
+                    return true;
+                })
+                .setCancelListener(R.string.alertdialog_cancel, customView -> true)
+                .setDraggable(true)
+                .build()
+                .show();
     }
 
     private void setListPreference(ListPreference listPreference, String preferenceKey) {
