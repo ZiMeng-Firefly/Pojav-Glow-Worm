@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch.prefs.screens;
 
+import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_RENDERER;
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_EXP_SETUP;
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_INITIAL_FRAMEBUFFER;
 import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_LOADER_OVERRIDE;
@@ -113,6 +114,12 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
             return true;
         });
 
+        Preference mgRendererSettingsPref = requirePreference("renderer_mobileglues_settings", Preference.class);
+        mgRendererSettingsPref.setOnPreferenceClickListener(preference -> {
+            mgRendererSettings();
+            return true;
+        });
+
         final ListPreference rendererListPref = requirePreference("renderer", ListPreference.class);
         final ListPreference configBridgePref = requirePreference("configBridge", ListPreference.class);
         final ChooseMesaListPref CMesaLibP = requirePreference("CMesaLibrary", ChooseMesaListPref.class);
@@ -130,7 +137,9 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
         setListPreference(CLibGLGLP, "CLibglGL");
 
         rendererListPref.setOnPreferenceChangeListener((pre, obj) -> {
-            Tools.LOCAL_RENDERER = (String) obj;
+            String currentRenderer = (String) obj;
+            Tools.LOCAL_RENDERER = currentRenderer;
+            mgRendererSettingsPref.setVisible(currentRenderer.equals("opengles3_mges"));
             return true;
         });
 
@@ -237,6 +246,7 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
         requirePreference("glInitialFrameBuffer").setVisible(PREF_INITIAL_FRAMEBUFFER);
         requirePreference("ebChooseMldo").setVisible(PGWTools.isAdrenoGPU());
         requirePreference("ChooseMldo").setVisible(PREF_LOADER_OVERRIDE);
+        requirePreference("renderer_mobileglues_settings").setVisible(PREF_RENDERER.equals("opengles3_mges"));
     }
 
     private void setVideoResolutionDialog(CustomSeekBarPreference seek) {
@@ -282,6 +292,10 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
                 .setDraggable(true)
                 .build()
                 .show();
+    }
+
+    private void mgRendererSettings() {
+    
     }
 
     private void setListPreference(ListPreference listPreference, String preferenceKey) {

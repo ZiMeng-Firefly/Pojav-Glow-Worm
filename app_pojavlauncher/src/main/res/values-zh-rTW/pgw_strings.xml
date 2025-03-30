@@ -80,6 +80,7 @@
     <string name="other_login_external">外部登陸</string>
     <string name="other_login_server_error">無驗證服務器</string>
     <!-- Renderer Experimental Setup -->
+    <string name="preference_renderer_mobileglues_settings">MobileGlues渲染器設置</string>
     <string name="preference_exp_title">實驗性設置</string>
     <string name="preference_exp_description">非專業人士不建議使用</string>
     <string name="preference_category_renderer_experimental_settings">渲染器實驗性設置</string>

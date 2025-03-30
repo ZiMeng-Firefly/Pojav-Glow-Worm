@@ -511,9 +511,12 @@ public class JREUtils {
         dlopen(NATIVE_LIB_DIR + "/libopenal.so");
 
         if (!renderer) return;
+
         String rendererLib = loadGraphicsLibrary();
         RendererPlugin.Renderer customRenderer = RendererPlugin.getSelectedRenderer();
+
         if (customRenderer != null) {
+            rendererLib = customRenderer.getPath() + "/" + loadGraphicsLibrary();
             customRenderer.getEnv().forEach(envPair -> {
                 if (envPair.getFirst().equals("DLOPEN")) {
                     String[] libs = envPair.getSecond().split(",");
@@ -523,6 +526,7 @@ public class JREUtils {
                 }
             });
         }
+
         if (!dlopen(rendererLib) && !dlopen(findInLdLibPath(rendererLib))) {
             Log.e("RENDER_LIBRARY", "Failed to load renderer " + rendererLib);
         }

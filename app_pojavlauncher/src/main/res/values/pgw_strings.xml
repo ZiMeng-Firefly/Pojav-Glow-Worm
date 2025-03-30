@@ -52,6 +52,7 @@
     <string name="other_login_external">External Landing</string>
     <string name="other_login_server_error">No authentication server</string>
     <!-- Renderer Experimental Setup -->
+    <string name="preference_renderer_mobileglues_settings">MobileGlues Renderer Settings</string>
     <string name="preference_exp_title">Experimental Settings</string>
     <string name="preference_exp_description">Non-professionals should not use it</string>
     <string name="preference_category_renderer_experimental_settings">Renderer exp setup</string>
