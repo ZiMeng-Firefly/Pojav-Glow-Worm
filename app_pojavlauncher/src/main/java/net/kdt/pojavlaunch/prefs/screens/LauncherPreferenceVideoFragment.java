@@ -40,6 +40,8 @@ import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -296,7 +298,9 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
                 .show();
     }
 
+    // MobileGlues Renderer Settings
     private void mgRendererSettings() {
+        // Layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_mgrenderer_settings, null);
         EditText maxGlslCacheSize = view.findViewById(R.id.mg_input_max_glsl_cache_size);
@@ -304,15 +308,51 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
         Spinner enableNoError = view.findViewById(R.id.mg_spinner_no_error);
         Switch enableExtGL43 = view.findViewById(R.id.mg_switch_ext_gl43);
         Switch enableExtComputeShader = view.findViewById(R.id.mg_switch_ext_cs);
-        
-        maxGlslCacheSize.setText("30");
-        enableExtGL43.setChecked(false);
-        enableExtComputeShader.setChecked(false);
+
+        // Max glsl cache size
+        maxGlslCacheSize.setText(LauncherPreferences.MG_GLSL_CACHE_SIZE);
+
+        // Angle Settings
+        ArrayList<String> angleOptions = new ArrayList<>();
+        angleOptions.add(getString(R.string.mg_option_angle_disable_if_possible));
+        angleOptions.add(getString(R.string.mg_option_angle_enable_if_possible));
+        angleOptions.add(getString(R.string.mg_option_angle_disable));
+        angleOptions.add(getString(R.string.mg_option_angle_enable));
+        ArrayAdapter<String> angleAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner, angleOptions);
+        enableANGLE.setAdapter(angleAdapter);
+        enableANGLE.setSelection(Integer.parseInt(LauncherPreferences.MG_ANGLE_OPTION));
+
+        // No error Settings
+        ArrayList<String> noErrorOptions = new ArrayList<>();
+        noErrorOptions.add(getString(R.string.mg_option_no_error_auto));
+        noErrorOptions.add(getString(R.string.mg_option_no_error_enable));
+        noErrorOptions.add(getString(R.string.mg_option_no_error_disable_pri));
+        noErrorOptions.add(getString(R.string.mg_option_no_error_disable_sec));
+        ArrayAdapter<String> noErrorAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner, noErrorOptions);
+        enableNoError.setAdapter(noErrorAdapter);
+        enableNoError.setSelection(Integer.parseInt(LauncherPreferences.MG_NOERROR_OPTION));
+
+        enableExtGL43.setChecked(LauncherPreferences.MG_EXT_GL43.equals("1"));
+        enableExtComputeShader.setChecked(LauncherPreferences.MG_EXT_CS.equals("1"));
+
         new CustomDialog.Builder(getContext())
                 .setCustomView(view)
                 .setCancelable(false)
                 .setConfirmListener(R.string.alertdialog_done, customView -> {
-                    String size = maxGlslCacheSize.getText().toString();
+                    String cacheSize = maxGlslCacheSize.getText().toString();
+
+                    LauncherPreferences.MG_GLSL_CACHE_SIZE = cacheSize;
+                    LauncherPreferences.MG_ANGLE_OPTION = Integer.toString(enableANGLE.getSelectedItemPosition());
+                    LauncherPreferences.MG_NOERROR_OPTION = Integer.toString(enableNoError.getSelectedItemPosition());
+                    LauncherPreferences.MG_EXT_GL43 = enableExtGL43.isChecked() ? "1" : "0";
+                    LauncherPreferences.MG_EXT_CS = enableExtComputeShader.isChecked() ? "1" : "0";
+                    LauncherPreferences.DEFAULT_PREF.edit()
+                            .putString("mg_glsl_cache_size", LauncherPreferences.MG_GLSL_CACHE_SIZE)
+                            .putString("mg_angle_option", LauncherPreferences.MG_ANGLE_OPTION)
+                            .putString("mg_noerror_option", LauncherPreferences.MG_NOERROR_OPTION)
+                            .putString("mg_ext_gl43", LauncherPreferences.MG_EXT_GL43)
+                            .putString("mg_ext_compute_shader", LauncherPreferences.MG_EXT_CS)
+                            .apply();
                     return true;
                 })
                 .setCancelListener(R.string.alertdialog_cancel, customView -> true)
