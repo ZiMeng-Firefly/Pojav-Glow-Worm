@@ -279,6 +279,9 @@ public class JREUtils {
             envMap.put("MG_enableNoError", MG_NOERROR_OPTION);
             envMap.put("MG_enableExtGL43", MG_EXT_GL43);
             envMap.put("MG_enableExtComputeShader", MG_EXT_CS);
+
+            if (!MG_ANGLE_OPTION.equals("0") || !MG_ANGLE_OPTION.equals("3"))
+                envMap.put("LIBGL_GLES", "libGLESv2_angle.so");
         }
 
         RendererPlugin.Renderer customRenderer = RendererPlugin.getSelectedRenderer();
@@ -554,6 +557,9 @@ public class JREUtils {
         {
             dlopen(NATIVE_LIB_DIR + "/libspirv-cross-c-shared.so");
             dlopen(NATIVE_LIB_DIR + "/libshaderconv.so");
+
+            if (!MG_ANGLE_OPTION.equals("0") || !MG_ANGLE_OPTION.equals("3"))
+                dlopen(NATIVE_LIB_DIR + "/libGLESv2_angle.so");
         }
 
         if (!dlopen(rendererLib) && !dlopen(findInLdLibPath(rendererLib))) {
