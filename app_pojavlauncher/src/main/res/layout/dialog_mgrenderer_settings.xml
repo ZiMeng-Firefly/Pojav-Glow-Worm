@@ -5,6 +5,7 @@
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/main_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -13,64 +14,86 @@
         android:textStyle="bold"
         android:text="@string/preference_renderer_mobileglues_settings" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mg_option_glsl_cache" />
-
-    <EditText
-        android:id="@+id/mg_input_max_glsl_cache_size"
-        android:hint="@string/mg_option_glsl_cache_hint"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="numberSigned" />
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/main_title">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mg_option_angle" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <Spinner
-        android:id="@+id/mg_spinner_angle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:minHeight="48dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mg_option_glsl_cache"
+                app:layout_constraintBottom_toTopOf="@+id/mg_input_max_glsl_cache_size">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mg_option_no_error" />
+            <EditText
+                android:id="@+id/mg_input_max_glsl_cache_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                app:layout_constraintBottom_toTopOf="@+id/text_option_angle" />
 
-    <Spinner
-        android:id="@+id/mg_spinner_no_error"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:minHeight="48dp" />
+            <TextView
+                android:id="@+id/text_option_angle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mg_option_angle"
+                app:layout_constraintBottom_toTopOf="@+id/mg_spinner_angle"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/mg_option_multidraw_mode" />
+            <Spinner
+                android:id="@+id/mg_spinner_angle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/text_option_no_error" />
 
-    <Spinner
-        android:id="@+id/mg_spinner_multidraw_mode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:minHeight="48dp" />
+            <TextView
+                android:id="@+id/text_option_no_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mg_option_no_error"
+                app:layout_constraintBottom_toTopOf="@+id/mg_spinner_no_error"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    <Switch
-        android:id="@+id/mg_switch_ext_gl43"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/mg_option_ext_gl43" />
+            <Spinner
+                android:id="@+id/mg_spinner_no_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/text_option_multidraw_mode" />
 
-    <Switch
-        android:id="@+id/mg_switch_ext_cs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/mg_option_ext_cs" />
+            <TextView
+                android:id="@+id/text_option_multidraw_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mg_option_multidraw_mode"
+                app:layout_constraintBottom_toTopOf="@+id/mg_spinner_multidraw_mode"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Spinner
+                android:id="@+id/mg_spinner_multidraw_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/mg_switch_ext_gl43" />
+
+            <Switch
+                android:id="@+id/mg_switch_ext_gl43"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mg_option_ext_gl43"
+                app:layout_constraintBottom_toTopOf="@+id/mg_switch_ext_cs" />
+
+            <Switch
+                android:id="@+id/mg_switch_ext_cs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mg_option_ext_cs"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </LinearLayout>
