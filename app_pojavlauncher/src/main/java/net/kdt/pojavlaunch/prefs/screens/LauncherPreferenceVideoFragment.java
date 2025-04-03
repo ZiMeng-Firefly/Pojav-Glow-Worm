@@ -341,7 +341,7 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
         multidrawModeOptions.add(getString(R.string.mg_option_multidraw_mode_multidraw_indirect));
         ArrayAdapter<String> multidrawModeAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner, multidrawModeOptions);
         enableCompatibleMode.setAdapter(multidrawModeAdapter);
-        enableNoError.setSelection(Integer.parseInt(LauncherPreferences.MG_MULTIDRAWMODE_OPTION));
+        enableCompatibleMode.setSelection(Integer.parseInt(LauncherPreferences.MG_MULTIDRAWMODE_OPTION));
 
         enableExtGL43.setChecked(LauncherPreferences.MG_EXT_GL43.equals("1"));
         enableExtComputeShader.setChecked(LauncherPreferences.MG_EXT_CS.equals("1"));
