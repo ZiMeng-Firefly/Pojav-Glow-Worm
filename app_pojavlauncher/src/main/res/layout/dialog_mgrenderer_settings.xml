@@ -49,6 +49,18 @@
         android:layout_margin="5dp"
         android:minHeight="48dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mg_option_multidraw_mode" />
+
+    <Spinner
+        android:id="@+id/mg_spinner_multidraw_mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:minHeight="48dp" />
+
     <Switch
         android:id="@+id/mg_switch_ext_gl43"
         android:layout_width="match_parent"
