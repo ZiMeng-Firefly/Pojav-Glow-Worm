@@ -11,6 +11,7 @@ import static net.kdt.pojavlaunch.prefs.LauncherPreferences.PREF_ZINK_PREFER_SYS
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +44,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -298,8 +300,17 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
                 .show();
     }
 
+    // Check current screen orientation
+    private boolean checkScreenOrientation() {
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) return true;
+        return false;
+    }
+
     // MobileGlues Renderer Settings
     private void mgRendererSettings() {
+        // Get screen orientation
+        checkScreenOrientation();
         // Layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_mgrenderer_settings, null);
@@ -309,6 +320,8 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
         Spinner enableCompatibleMode = view.findViewById(R.id.mg_spinner_multidraw_mode);
         Switch enableExtGL43 = view.findViewById(R.id.mg_switch_ext_gl43);
         Switch enableExtComputeShader = view.findViewById(R.id.mg_switch_ext_cs);
+        FrameLayout container = view.findViewById(R.id.mg_view_container);
+        container.setVisible(checkScreenOrientation());
 
         // Max glsl cache size
         maxGlslCacheSize.setText(LauncherPreferences.MG_GLSL_CACHE_SIZE);
