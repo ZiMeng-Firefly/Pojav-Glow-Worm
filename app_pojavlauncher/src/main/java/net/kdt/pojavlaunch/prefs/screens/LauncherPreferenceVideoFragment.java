@@ -309,8 +309,6 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
 
     // MobileGlues Renderer Settings
     private void mgRendererSettings() {
-        // Get screen orientation
-        checkScreenOrientation();
         // Layout
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_mgrenderer_settings, null);
