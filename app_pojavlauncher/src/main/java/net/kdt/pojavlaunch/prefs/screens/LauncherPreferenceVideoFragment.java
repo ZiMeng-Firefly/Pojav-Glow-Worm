@@ -302,9 +302,7 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
 
     // Check current screen orientation
     private boolean checkScreenOrientation() {
-        int orientation = getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) return true;
-        return false;
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     // MobileGlues Renderer Settings
@@ -319,7 +317,7 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
         Switch enableExtGL43 = view.findViewById(R.id.mg_switch_ext_gl43);
         Switch enableExtComputeShader = view.findViewById(R.id.mg_switch_ext_cs);
         FrameLayout container = view.findViewById(R.id.mg_view_container);
-        container.setVisible(checkScreenOrientation());
+        container.setVisibility(checkScreenOrientation() ? View.VISIBLE : View.GONE);
 
         // Max glsl cache size
         maxGlslCacheSize.setText(LauncherPreferences.MG_GLSL_CACHE_SIZE);
